@@ -5,18 +5,19 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
-import android.widget.TextView;
-
 import java.io.File;
 import org.mapsforge.android.maps.overlay.ArrayItemizedOverlay;
-import org.mapsforge.android.maps.overlay.Overlay;
 import org.mapsforge.core.GeoPoint;
 import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.MapView;
 import org.mapsforge.android.maps.overlay.OverlayItem;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 
@@ -115,12 +116,9 @@ public class MapApplicationActivity extends MapActivity implements
 		itemizedOverlay = new ArrayItemizedOverlay(
 				getResources().getDrawable(R.drawable.btn_star));
 		itemizedOverlay.addItem(item1);
-		// itemizedOverlay.addItem(item2);
-
 		// add both Overlays to the MapView
 		mapView.getOverlays().add(itemizedOverlay);
 		
-		Toast.makeText(this, "Map Redraw",1000).show();
 	}
 
 	@Override
@@ -140,5 +138,33 @@ public class MapApplicationActivity extends MapActivity implements
 	public void onProviderDisabled(String provider) {
 		Toast.makeText(this, "Disabled provider " + provider,
 				Toast.LENGTH_SHORT).show();
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.menu, menu);
+	    return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	        case R.id.refresh:
+	        Location location = locationManager.getLastKnownLocation(provider);
+			onLocationChanged(location);
+	            return true;
+	        case R.id.help:
+	        	Toast.makeText(this, "Aici este meniul Help",Toast.LENGTH_SHORT).show();
+	            return true;
+	        case R.id.exit:
+	        	Intent intent = new Intent(Intent.ACTION_MAIN);
+	            intent.addCategory(Intent.CATEGORY_HOME);
+	            startActivity(intent);
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
 	}
 }
