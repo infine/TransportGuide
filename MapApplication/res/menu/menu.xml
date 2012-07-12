@@ -15,5 +15,9 @@
         android:id="@+id/exit"
         android:icon="@drawable/ic_exit"
         android:title="@string/exit"/>
+        <item
+        android:id="@+id/bus"
+        android:icon="@drawable/ic_bus"
+        android:title="@string/bus"/>
 
 </menu>

@@ -13,6 +13,7 @@ import java.io.File;
 import org.mapsforge.android.maps.overlay.ArrayItemizedOverlay;
 import org.mapsforge.core.GeoPoint;
 import org.mapsforge.android.maps.MapActivity;
+import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
 import org.mapsforge.android.maps.overlay.OverlayItem;
 import android.content.Context;
@@ -77,6 +78,8 @@ public class MapApplicationActivity extends MapActivity implements
 		// add both Overlays to the MapView
 		mapView.getOverlays().add(itemizedOverlay);
 		mapView.setCenter(geoPoint1);
+		final MapController mc = mapView.getController();
+		mc.setZoom(16);
 
 	}
 
@@ -156,6 +159,10 @@ public class MapApplicationActivity extends MapActivity implements
 			Toast.makeText(this, "Aici este meniul Help", Toast.LENGTH_SHORT)
 					.show();
 			return true;
+		case R.id.bus:
+			Intent in = new Intent(getApplicationContext(), AndroidXMLParsingActivity.class);
+			startActivity(in);
+			return true;	
 		case R.id.exit:
 			Intent intent = new Intent(Intent.ACTION_MAIN);
 			intent.addCategory(Intent.CATEGORY_HOME);

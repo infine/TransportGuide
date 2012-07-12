@@ -4,6 +4,7 @@
     <string name="hello">Hello World, MapApplicationActivity!</string>
     <string name="help">Help</string><string name="refresh">Refresh</string><string name="app_name">MapApplication</string>
     <string name="exit">Exit</string>
+    <string name="bus">Show Bus Station</string>
     
     
 
