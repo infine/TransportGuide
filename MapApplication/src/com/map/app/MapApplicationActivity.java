@@ -15,7 +15,6 @@ import org.mapsforge.core.GeoPoint;
 import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.MapView;
 import org.mapsforge.android.maps.overlay.OverlayItem;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -58,10 +57,7 @@ public class MapApplicationActivity extends MapActivity implements
 		}
 		// create some points to be shown on top of the map
 		GeoPoint geoPoint1 = new GeoPoint(lat, lng);
-		// GeoPoint geoPoint2 = new GeoPoint(52.516272, 13.377722);
 		item1 = new OverlayItem(geoPoint1, "Point", "here you are");
-		// OverlayItem item2 = new OverlayItem(geoPoint2, "Brandenburg Gate",
-		// "one of the main symbols of Berlin");
 
 		// create the paint object for the RouteOverlay and set all parameters
 		Paint paint = new Paint();
@@ -73,13 +69,14 @@ public class MapApplicationActivity extends MapActivity implements
 		paint.setStrokeJoin(Paint.Join.ROUND);
 
 		// create the ItemizedOverlay and set the items
-		itemizedOverlay = new ArrayItemizedOverlay(
-				getResources().getDrawable(R.drawable.btn_star));
+		itemizedOverlay = new ArrayItemizedOverlay(getResources().getDrawable(
+				R.drawable.btn_star));
 		itemizedOverlay.addItem(item1);
 		// itemizedOverlay.addItem(item2);
 
 		// add both Overlays to the MapView
 		mapView.getOverlays().add(itemizedOverlay);
+		mapView.setCenter(geoPoint1);
 
 	}
 
@@ -113,12 +110,12 @@ public class MapApplicationActivity extends MapActivity implements
 		paint.setStrokeJoin(Paint.Join.ROUND);
 
 		// create the ItemizedOverlay and set the items
-		itemizedOverlay = new ArrayItemizedOverlay(
-				getResources().getDrawable(R.drawable.btn_star));
+		itemizedOverlay = new ArrayItemizedOverlay(getResources().getDrawable(
+				R.drawable.btn_star));
 		itemizedOverlay.addItem(item1);
 		// add both Overlays to the MapView
 		mapView.getOverlays().add(itemizedOverlay);
-		
+
 	}
 
 	@Override
@@ -139,32 +136,33 @@ public class MapApplicationActivity extends MapActivity implements
 		Toast.makeText(this, "Disabled provider " + provider,
 				Toast.LENGTH_SHORT).show();
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.menu, menu);
-	    return true;
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu, menu);
+		return true;
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-	    // Handle item selection
-	    switch (item.getItemId()) {
-	        case R.id.refresh:
-	        Location location = locationManager.getLastKnownLocation(provider);
+		// Handle item selection
+		switch (item.getItemId()) {
+		case R.id.refresh:
+			Location location = locationManager.getLastKnownLocation(provider);
 			onLocationChanged(location);
-	            return true;
-	        case R.id.help:
-	        	Toast.makeText(this, "Aici este meniul Help",Toast.LENGTH_SHORT).show();
-	            return true;
-	        case R.id.exit:
-	        	Intent intent = new Intent(Intent.ACTION_MAIN);
-	            intent.addCategory(Intent.CATEGORY_HOME);
-	            startActivity(intent);
-	            return true;
-	        default:
-	            return super.onOptionsItemSelected(item);
-	    }
+			return true;
+		case R.id.help:
+			Toast.makeText(this, "Aici este meniul Help", Toast.LENGTH_SHORT)
+					.show();
+			return true;
+		case R.id.exit:
+			Intent intent = new Intent(Intent.ACTION_MAIN);
+			intent.addCategory(Intent.CATEGORY_HOME);
+			startActivity(intent);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 }
