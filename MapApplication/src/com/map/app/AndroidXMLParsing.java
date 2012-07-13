@@ -8,7 +8,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-public class AndroidXMLParsing{
+public class AndroidXMLParsing {
 
 	// All static variables
 	static final String URL = "FILE:///sdcard/Others/bus.xml";
@@ -27,7 +27,6 @@ public class AndroidXMLParsing{
 	static ArrayList<HashMap<String, String>> menuItems = new ArrayList<HashMap<String, String>>();
 
 	public static void read() {
-		
 
 		XMLParser parser = new XMLParser();
 		String xml = null;
@@ -50,19 +49,15 @@ public class AndroidXMLParsing{
 			map.put(KEY_NAME, parser.getValue(e, KEY_NAME));
 			map.put(KEY_COST, parser.getValue(e, KEY_COST));
 			map.put(KEY_DESC, parser.getValue(e, KEY_DESC));
-			double dist = (Math.sqrt((Math.abs(MapApplicationActivity.getLatitude()
-					- Double.parseDouble(parser.getValue(e, KEY_COST)))
-					* 111.2
-					* Math.abs(MapApplicationActivity.getLatitude()
-							- Double.parseDouble(parser.getValue(e, KEY_COST)))
-					* 111.2 + Math.abs(MapApplicationActivity.getLongitude()
-					- Double.parseDouble(parser.getValue(e, KEY_DESC)))
-					* 111.2
-					* Math.abs(MapApplicationActivity.getLongitude()
-							- Double.parseDouble(parser.getValue(e, KEY_DESC)))
-					* 111.2)));
+			double lon = (MapApplicationActivity.getLongitude() - 
+					Double.parseDouble(parser.getValue(e, KEY_DESC))) * 111.2;
+
+			double lat = (MapApplicationActivity.getLatitude() - Double
+					.parseDouble(parser.getValue(e, KEY_COST))) * 111.2;
+
+			double dist = Math.sqrt(lat * lat + lon * lon);
 			String distance = Double.toString(dist);
-			if (dist<min){
+			if (dist < min) {
 				min = dist;
 				latitude = Double.parseDouble(parser.getValue(e, KEY_COST));
 				longitude = Double.parseDouble(parser.getValue(e, KEY_DESC));
@@ -70,24 +65,22 @@ public class AndroidXMLParsing{
 			map.put(KEY_DIST, distance + " km");
 			// adding HashList to ArrayList
 			menuItems.add(map);
-			
+
 		}
 
 		// Adding menuItems to ListView
-		
+
 	}
-	
-	public static double getNearestLat()
-	{
+
+	public static double getNearestLat() {
 		return latitude;
 	}
-	public static double getNearestLon()
-	{
+
+	public static double getNearestLon() {
 		return longitude;
 	}
-	
-	public static ArrayList<HashMap<String, String>> getValues()
-	{
+
+	public static ArrayList<HashMap<String, String>> getValues() {
 		return menuItems;
 	}
 }
