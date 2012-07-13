@@ -31,6 +31,7 @@ public class MapApplicationActivity extends MapActivity implements
 	private MapView mapView;
 	private OverlayItem item1;
 	private ArrayItemizedOverlay itemizedOverlay;
+	private ArrayItemizedOverlay itemizedOverlay2;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -120,18 +121,15 @@ public class MapApplicationActivity extends MapActivity implements
 		mapView.getOverlays().add(itemizedOverlay);
 
 	}
-	
-	public static double getLatitude()
-	{
+
+	public static double getLatitude() {
 		return lat;
 	}
 
-	public static double getLongitude()
-	{
+	public static double getLongitude() {
 		return lng;
 	}
 
-	
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 		// TODO Auto-generated method stub
@@ -171,9 +169,32 @@ public class MapApplicationActivity extends MapActivity implements
 					.show();
 			return true;
 		case R.id.bus:
-			Intent in = new Intent(getApplicationContext(), AndroidXMLParsingActivity.class);
+			Intent in = new Intent(getApplicationContext(),
+					AndroidXMLParsingActivity.class);
 			startActivity(in);
-			return true;	
+			return true;
+		case R.id.near:
+			mapView.getOverlays().remove(itemizedOverlay2);
+			GeoPoint geoPoint2 = new GeoPoint(
+					AndroidXMLParsingActivity.getNearestLat(),
+					AndroidXMLParsingActivity.getNearestLon());
+			OverlayItem item2 = new OverlayItem(geoPoint2, "Point",
+					"nearest Station");
+			Paint paint = new Paint();
+			paint.setStyle(Paint.Style.STROKE);
+			paint.setColor(Color.BLUE);
+			paint.setAlpha(128);
+			paint.setStrokeWidth(6);
+			paint.setStrokeCap(Paint.Cap.ROUND);
+			paint.setStrokeJoin(Paint.Join.ROUND);
+
+			// create the ItemizedOverlay and set the items
+			itemizedOverlay2 = new ArrayItemizedOverlay(getResources()
+					.getDrawable(R.drawable.ic_buss));
+			itemizedOverlay2.addItem(item2);
+			// add both Overlays to the MapView
+			mapView.getOverlays().add(itemizedOverlay2);
+			return true;
 		case R.id.exit:
 			Intent intent = new Intent(Intent.ACTION_MAIN);
 			intent.addCategory(Intent.CATEGORY_HOME);

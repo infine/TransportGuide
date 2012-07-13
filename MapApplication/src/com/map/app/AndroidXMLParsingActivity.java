@@ -9,17 +9,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import android.app.ListActivity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
-
-import java.math.*;
 
 public class AndroidXMLParsingActivity extends ListActivity {
 
@@ -32,6 +24,11 @@ public class AndroidXMLParsingActivity extends ListActivity {
 	static final String KEY_COST = "lat";
 	static final String KEY_DESC = "lon";
 	static final String KEY_DIST = "dist";
+	double min = 30;
+	static int i;
+	NodeList nl;
+	static double latitude;
+	static double longitude;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -50,7 +47,7 @@ public class AndroidXMLParsingActivity extends ListActivity {
 		} // getting XML
 		Document doc = parser.getDomElement(xml); // getting DOM element
 
-		NodeList nl = doc.getElementsByTagName(KEY_ITEM);
+		nl = doc.getElementsByTagName(KEY_ITEM);
 		// looping through all item nodes <item>
 		for (int i = 0; i < nl.getLength(); i++) {
 			// creating new HashMap
@@ -73,9 +70,15 @@ public class AndroidXMLParsingActivity extends ListActivity {
 							- Double.parseDouble(parser.getValue(e, KEY_DESC)))
 					* 111.2)));
 			String distance = Double.toString(dist);
+			if (dist<min){
+				min = dist;
+				latitude = Double.parseDouble(parser.getValue(e, KEY_COST));
+				longitude = Double.parseDouble(parser.getValue(e, KEY_DESC));
+			}
 			map.put(KEY_DIST, distance + " km");
 			// adding HashList to ArrayList
 			menuItems.add(map);
+			
 		}
 
 		// Adding menuItems to ListView
@@ -86,5 +89,14 @@ public class AndroidXMLParsingActivity extends ListActivity {
 
 		setListAdapter(adapter);
 
+	}
+	
+	public static double getNearestLat()
+	{
+		return latitude;
+	}
+	public static double getNearestLon()
+	{
+		return longitude;
 	}
 }
