@@ -10,10 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 import java.io.File;
-import java.util.List;
-
 import org.mapsforge.android.maps.overlay.ArrayItemizedOverlay;
-import org.mapsforge.android.maps.overlay.Overlay;
 import org.mapsforge.core.GeoPoint;
 import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.MapController;
@@ -89,6 +86,7 @@ public class MapApplicationActivity extends MapActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
+		mapView.getOverlays().remove(itemizedOverlay2);
 		locationManager.requestLocationUpdates(provider, 400, 1, this);
 	}
 
@@ -176,9 +174,10 @@ public class MapApplicationActivity extends MapActivity implements
 			return true;
 		case R.id.near:
 			mapView.getOverlays().remove(itemizedOverlay2);
+			AndroidXMLParsing.read();
 			GeoPoint geoPoint2 = new GeoPoint(
-					AndroidXMLParsingActivity.getNearestLat(),
-					AndroidXMLParsingActivity.getNearestLon());
+					AndroidXMLParsing.getNearestLat(),
+					AndroidXMLParsing.getNearestLon());
 			OverlayItem item2 = new OverlayItem(geoPoint2, "Point",
 					"nearest Station");
 			Paint paint = new Paint();
