@@ -24,15 +24,6 @@
         <!-- Description label -->
 
         <TextView
-            android:id="@+id/desciption"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="2dip"
-            android:textColor="#acacac" >
-        </TextView>
-        <!-- Linear layout for cost and price Cost: Rs.100 -->
-
-        <TextView
             android:id="@+id/cost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -24,8 +24,8 @@ import android.graphics.Paint;
 public class MapApplicationActivity extends MapActivity implements
 		LocationListener {
 
-	double lat;
-	double lng;
+	static double lat;
+	static double lng;
 	private String provider;
 	private LocationManager locationManager;
 	private MapView mapView;
@@ -120,7 +120,18 @@ public class MapApplicationActivity extends MapActivity implements
 		mapView.getOverlays().add(itemizedOverlay);
 
 	}
+	
+	public static double getLatitude()
+	{
+		return lat;
+	}
 
+	public static double getLongitude()
+	{
+		return lng;
+	}
+
+	
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 		// TODO Auto-generated method stub

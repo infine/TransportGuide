@@ -20,13 +20,12 @@ public final class R {
         public static final int ic_refresh=0x7f020006;
     }
     public static final class id {
-        public static final int bus=0x7f060006;
-        public static final int cost=0x7f060002;
-        public static final int desciption=0x7f060001;
-        public static final int exit=0x7f060005;
-        public static final int help=0x7f060004;
+        public static final int bus=0x7f060005;
+        public static final int cost=0x7f060001;
+        public static final int exit=0x7f060004;
+        public static final int help=0x7f060003;
         public static final int name=0x7f060000;
-        public static final int refresh=0x7f060003;
+        public static final int refresh=0x7f060002;
     }
     public static final class layout {
         public static final int list_item=0x7f030000;
