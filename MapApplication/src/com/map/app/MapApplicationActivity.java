@@ -10,7 +10,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 import java.io.File;
+import java.util.List;
+
 import org.mapsforge.android.maps.overlay.ArrayItemizedOverlay;
+import org.mapsforge.android.maps.overlay.Overlay;
 import org.mapsforge.core.GeoPoint;
 import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.MapController;
@@ -35,7 +38,6 @@ public class MapApplicationActivity extends MapActivity implements
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		super.onCreate(savedInstanceState);
 		mapView = new MapView(this);
 		mapView.setClickable(true);
 		mapView.setBuiltInZoomControls(true);
@@ -50,7 +52,6 @@ public class MapApplicationActivity extends MapActivity implements
 		criteria.setAccuracy(Criteria.ACCURACY_FINE);
 		provider = locationManager.getBestProvider(criteria, false);
 		Location location = locationManager.getLastKnownLocation(provider);
-
 		// Initialize the location fields
 		if (location != null) {
 			System.out.println("Provider " + provider + " has been selected.");
@@ -196,6 +197,7 @@ public class MapApplicationActivity extends MapActivity implements
 			mapView.getOverlays().add(itemizedOverlay2);
 			return true;
 		case R.id.exit:
+			finish();
 			Intent intent = new Intent(Intent.ACTION_MAIN);
 			intent.addCategory(Intent.CATEGORY_HOME);
 			startActivity(intent);
@@ -204,4 +206,5 @@ public class MapApplicationActivity extends MapActivity implements
 			return super.onOptionsItemSelected(item);
 		}
 	}
+
 }
