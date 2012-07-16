@@ -20,7 +20,10 @@
         android:id="@+id/near"
         android:icon="@drawable/ic_near"
         android:title="@string/near"/>
-
+    <item
+        android:id="@+id/neardest"
+        android:icon="@drawable/ic_exit"
+        android:title="@string/dest"/>
     <item
         android:id="@+id/exit"
         android:icon="@drawable/ic_exit"

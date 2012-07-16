@@ -23,7 +23,7 @@ public class AndroidXMLParsingActivity extends ListActivity{
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.main1);
 
-			AndroidXMLParsing.read();
+			AndroidXMLParsing.read(MapApplicationActivity.getLatitude(),MapApplicationActivity.getLongitude());
 			menuItems = AndroidXMLParsing.getValues() ;
            						
 

@@ -26,10 +26,11 @@ public class AndroidXMLParsing {
 	static double longitude;
 	static ArrayList<HashMap<String, String>> menuItems = new ArrayList<HashMap<String, String>>();
 
-	public static void read() {
+	public static void read(double latitudeSpecified,double longitudeSpecified) {
         menuItems.removeAll(menuItems);  
 		XMLParser parser = new XMLParser();
 		String xml = null;
+		min = 30;
 		try {
 			xml = XMLParser.getXmlFromUrl(URL);
 		} catch (MalformedURLException e1) {
@@ -49,10 +50,10 @@ public class AndroidXMLParsing {
 			map.put(KEY_NAME, parser.getValue(e, KEY_NAME));
 			map.put(KEY_COST, parser.getValue(e, KEY_COST));
 			map.put(KEY_DESC, parser.getValue(e, KEY_DESC));
-			double lon = (MapApplicationActivity.getLongitude() - 
+			double lon = (longitudeSpecified - 
 					Double.parseDouble(parser.getValue(e, KEY_DESC))) * 111.2;
 
-			double lat = (MapApplicationActivity.getLatitude() - Double
+			double lat = (latitudeSpecified - Double
 					.parseDouble(parser.getValue(e, KEY_COST))) * 111.2;
 
 			double dist = Math.sqrt(lat * lat + lon * lon);
@@ -71,12 +72,23 @@ public class AndroidXMLParsing {
 		// Adding menuItems to ListView
 
 	}
+	
+	
+
 
 	public static double getNearestLat() {
 		return latitude;
 	}
 
 	public static double getNearestLon() {
+		return longitude;
+	}
+	
+	public static double getNearestDestLat() {
+		return latitude;
+	}
+
+	public static double getNearestDestLon() {
 		return longitude;
 	}
 
