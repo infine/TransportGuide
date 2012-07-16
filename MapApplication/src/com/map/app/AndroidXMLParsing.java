@@ -27,7 +27,7 @@ public class AndroidXMLParsing {
 	static ArrayList<HashMap<String, String>> menuItems = new ArrayList<HashMap<String, String>>();
 
 	public static void read() {
-
+        menuItems.removeAll(menuItems);  
 		XMLParser parser = new XMLParser();
 		String xml = null;
 		try {
