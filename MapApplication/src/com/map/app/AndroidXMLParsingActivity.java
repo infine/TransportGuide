@@ -1,43 +1,21 @@
 package com.map.app;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import android.app.ListActivity;
 import android.os.Bundle;
-import android.widget.ListAdapter;
-import android.widget.SimpleAdapter;
+import android.widget.ArrayAdapter;
 
-public class AndroidXMLParsingActivity extends ListActivity{
-	// All static variables
-		static final String URL = "http://api.androidhive.info/pizza/?format=xml";
-		// XML node keys
-		static final String KEY_ITEM = "item"; // parent node
-		static final String KEY_ID = "id";
-		static final String KEY_NAME = "name";
-		static final String KEY_DIST = "dist";
-		ArrayList<HashMap<String, String>> menuItems;
-		
-		@Override
-		public void onCreate(Bundle savedInstanceState) {
-			super.onCreate(savedInstanceState);
-			setContentView(R.layout.main1);
+public class AndroidXMLParsingActivity extends ListActivity {
 
-			AndroidXMLParsing.read(MapApplicationActivity.getLatitude(),MapApplicationActivity.getLongitude());
-			menuItems = AndroidXMLParsing.getValues() ;
-           						
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main1);
 
-			// Adding menuItems to ListView
-			ListAdapter adapter = new SimpleAdapter(this, menuItems,
-					R.layout.list_item,
-					new String[] { KEY_NAME,  KEY_DIST }, new int[] {
-							R.id.name,  R.id.cost });
+		// Adding menuItems to ListView
+		ArrayAdapter<BusStation> arrayAdapter = new ArrayAdapter<BusStation>(
+				this, android.R.layout.simple_list_item_1,
+				AndroidXMLParsing.getValues());
+		setListAdapter(arrayAdapter);
+	}
 
-			setListAdapter(adapter);
-
-
-				}
-			
-		}
-	
-
+}

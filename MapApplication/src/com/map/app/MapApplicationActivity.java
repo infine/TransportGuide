@@ -19,26 +19,31 @@ import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
 import org.mapsforge.android.maps.overlay.OverlayItem;
+
+import android.app.ActivityManager;
+import android.app.ActivityManager.MemoryInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 
 public class MapApplicationActivity extends MapActivity implements
-		LocationListener, OnTouchListener{
+		LocationListener, OnTouchListener {
 
 	static double lat;
 	static double lng;
 	private String provider;
 	private LocationManager locationManager;
 	private MapView mapView;
-	private OverlayItem item1,item4;
+	private OverlayItem item1, item4;
 	private ArrayItemizedOverlay itemizedOverlay;
 	private ArrayItemizedOverlay itemizedOverlay2;
 	private ArrayItemizedOverlay itemizedOverlay3;
 	private ArrayItemizedOverlay itemizedOverlay5;
 	private static GeoPoint p;
-	private GeoPoint geoPoint1,geoPoint4;
+	private GeoPoint geoPoint1, geoPoint4;
+	MemoryInfo mi = new MemoryInfo();
+	ActivityManager activityManager;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -49,6 +54,9 @@ public class MapApplicationActivity extends MapActivity implements
 		mapView.setOnTouchListener(this);
 
 		setContentView(mapView);
+		activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+		System.out.println("***before: " + getFreeMemory() + "MB");
+		AndroidXMLParsing.parseBusStations();
 
 		// Get the location manager
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -65,7 +73,7 @@ public class MapApplicationActivity extends MapActivity implements
 			lng = location.getLongitude();
 		}
 		// create some points to be shown on top of the map
-	    geoPoint1 = new GeoPoint(lat, lng);
+		geoPoint1 = new GeoPoint(lat, lng);
 
 		item1 = new OverlayItem(geoPoint1, "Point", "here you are");
 
@@ -89,6 +97,7 @@ public class MapApplicationActivity extends MapActivity implements
 		mapView.setCenter(geoPoint1);
 		final MapController mc = mapView.getController();
 		mc.setZoom(16);
+		System.out.println("***after: " + getFreeMemory() + "MB");
 
 	}
 
@@ -98,6 +107,7 @@ public class MapApplicationActivity extends MapActivity implements
 		super.onResume();
 		mapView.getOverlays().remove(itemizedOverlay2);
 		locationManager.requestLocationUpdates(provider, 400, 1, this);
+		System.out.println("***" + getFreeMemory() + "MB");
 	}
 
 	/* Remove the locationlistener updates when Activity is paused */
@@ -105,10 +115,12 @@ public class MapApplicationActivity extends MapActivity implements
 	protected void onPause() {
 		super.onPause();
 		locationManager.removeUpdates(this);
+		System.out.println("***" + getFreeMemory() + "MB");
 	}
 
 	@Override
 	public void onLocationChanged(Location location) {
+		System.out.println("***before: " + getFreeMemory() + "MB");
 		lat = location.getLatitude();
 		lng = location.getLongitude();
 		mapView.getOverlays().remove(itemizedOverlay);
@@ -128,6 +140,7 @@ public class MapApplicationActivity extends MapActivity implements
 		itemizedOverlay.addItem(item1);
 		// add both Overlays to the MapView
 		mapView.getOverlays().add(itemizedOverlay);
+		System.out.println("***after: " + getFreeMemory() + "MB");
 
 	}
 
@@ -138,6 +151,7 @@ public class MapApplicationActivity extends MapActivity implements
 	public static double getLongitude() {
 		return lng;
 	}
+
 	public static double getDestLatitude() {
 		return p.getLatitude();
 	}
@@ -172,6 +186,12 @@ public class MapApplicationActivity extends MapActivity implements
 		return true;
 	}
 
+	public long getFreeMemory() {
+		activityManager.getMemoryInfo(mi);
+		long availableMegs = mi.availMem / 1048576L;
+		return availableMegs;
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
@@ -191,10 +211,9 @@ public class MapApplicationActivity extends MapActivity implements
 			return true;
 		case R.id.near:
 			mapView.getOverlays().remove(itemizedOverlay2);
-			AndroidXMLParsing.read(lat,lng);
-			GeoPoint geoPoint2 = new GeoPoint(
-					AndroidXMLParsing.getNearestLat(),
-					AndroidXMLParsing.getNearestLon());
+			String s[] = AndroidXMLParsing.getNearestCoord(lat, lng).split(",");
+			GeoPoint geoPoint2 = new GeoPoint(Double.parseDouble(s[1]),
+					Double.parseDouble(s[0]));
 			OverlayItem item2 = new OverlayItem(geoPoint2, "Point",
 					"nearest Station");
 			Paint paint = new Paint();
@@ -214,10 +233,10 @@ public class MapApplicationActivity extends MapActivity implements
 			return true;
 		case R.id.neardest:
 			mapView.getOverlays().remove(itemizedOverlay3);
-			AndroidXMLParsing.read(p.getLatitude(),p.getLongitude());
-			GeoPoint geoPoint3 = new GeoPoint(
-					AndroidXMLParsing.getNearestDestLat(),
-					AndroidXMLParsing.getNearestDestLon());
+			String s1[] = AndroidXMLParsing.getNearestCoord(p.getLatitude(),
+					p.getLongitude()).split(",");
+			GeoPoint geoPoint3 = new GeoPoint(Double.parseDouble(s1[1]),
+					Double.parseDouble(s1[0]));
 			OverlayItem item3 = new OverlayItem(geoPoint3, "Point",
 					"nearest Station");
 			Paint paint1 = new Paint();
@@ -235,6 +254,11 @@ public class MapApplicationActivity extends MapActivity implements
 			// add both Overlays to the MapView
 			mapView.getOverlays().add(itemizedOverlay3);
 			return true;
+		case R.id.bus_l:
+			Intent in1 = new Intent(getApplicationContext(),
+					AndroidXMLBusParsingActivity.class);
+			startActivity(in1);
+			return true;
 		case R.id.exit:
 			finish();
 			Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -248,16 +272,18 @@ public class MapApplicationActivity extends MapActivity implements
 
 	@Override
 	public boolean onTouch(View arg0, MotionEvent event) {
-       
+
 		// ---when user lifts his finger---
 		if (event.getAction() == 1) {
 			mapView.getOverlays().remove(itemizedOverlay5);
+			System.out.println("***delete" + getFreeMemory() + "MB");
 			p = mapView.getProjection().fromPixels((int) event.getX(),
 					(int) event.getY());
-			geoPoint4 = new GeoPoint(p.getLatitude(),p.getLongitude());
-		    item4 = new OverlayItem(geoPoint4, "Point", "here you are");
+			geoPoint4 = new GeoPoint(p.getLatitude(), p.getLongitude());
+			item4 = new OverlayItem(geoPoint4, "Point", "here you are");
 
-			// create the paint object for the RouteOverlay and set all parameters
+			// create the paint object for the RouteOverlay and set all
+			// parameters
 			Paint paint = new Paint();
 			paint.setStyle(Paint.Style.STROKE);
 			paint.setColor(Color.BLUE);
@@ -267,18 +293,18 @@ public class MapApplicationActivity extends MapActivity implements
 			paint.setStrokeJoin(Paint.Join.ROUND);
 
 			// create the ItemizedOverlay and set the items
-			itemizedOverlay5 = new ArrayItemizedOverlay(getResources().getDrawable(
-					R.drawable.btn_star_red));
+			itemizedOverlay5 = new ArrayItemizedOverlay(getResources()
+					.getDrawable(R.drawable.btn_star_red));
 			itemizedOverlay5.addItem(item4);
 			// itemizedOverlay.addItem(item2);
 
 			// add both Overlays to the MapView
 			mapView.getOverlays().add(itemizedOverlay5);
+			System.out.println("***set" + getFreeMemory() + "MB");
 
 		}
 
 		return false;
 	}
-
 
 }

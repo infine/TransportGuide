@@ -2,7 +2,7 @@ package com.map.app;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -11,26 +11,25 @@ import org.w3c.dom.NodeList;
 public class AndroidXMLParsing {
 
 	// All static variables
-	static final String URL = "FILE:///sdcard/Others/bus.xml";
+	static final String URL = "FILE:///sdcard/Others/map1.xml";
 	// XML node keys
-	static final String KEY_ITEM = "item"; // parent node
+	static final String KEY_ITEM = "node"; // parent node
 	static final String KEY_ID = "id";
 	static final String KEY_NAME = "name";
-	static final String KEY_COST = "lat";
-	static final String KEY_DESC = "lon";
+	static final String KEY_COOR = "coordinates";
+	static final String KEY_HIGH = "highway";
+	static final String KEY_AMEN = "amenity";
 	static final String KEY_DIST = "dist";
-	static double min = 30;
 	static int i;
 	static NodeList nl;
-	static double latitude;
-	static double longitude;
-	static ArrayList<HashMap<String, String>> menuItems = new ArrayList<HashMap<String, String>>();
+	static String id;
+	static List<BusStation> busStationList = new ArrayList<BusStation>();
 
-	public static void read(double latitudeSpecified,double longitudeSpecified) {
-        menuItems.removeAll(menuItems);  
+
+	public static void parseBusStations() {
+		busStationList.clear();
 		XMLParser parser = new XMLParser();
 		String xml = null;
-		min = 30;
 		try {
 			xml = XMLParser.getXmlFromUrl(URL);
 		} catch (MalformedURLException e1) {
@@ -41,58 +40,48 @@ public class AndroidXMLParsing {
 
 		nl = doc.getElementsByTagName(KEY_ITEM);
 		// looping through all item nodes <item>
-		for (int i = 0; i < nl.getLength(); i++) {
+		for (i = 0; i < nl.getLength(); i++) {
 			// creating new HashMap
-			HashMap<String, String> map = new HashMap<String, String>();
 			Element e = (Element) nl.item(i);
-			// adding each child node to HashMap key => value
-			map.put(KEY_ID, parser.getValue(e, KEY_ID));
-			map.put(KEY_NAME, parser.getValue(e, KEY_NAME));
-			map.put(KEY_COST, parser.getValue(e, KEY_COST));
-			map.put(KEY_DESC, parser.getValue(e, KEY_DESC));
-			double lon = (longitudeSpecified - 
-					Double.parseDouble(parser.getValue(e, KEY_DESC))) * 111.2;
+			if (parser.getValue(e, KEY_HIGH).equals("bus_stop")
+					|| parser.getValue(e, KEY_AMEN).equals("bus_station")
+					|| parser.getValue(e, KEY_AMEN).equals("tram_stop")) {
+				// adding each child node to HashMap key => value
+				{busStationList.add( new BusStation(parser.getValue(e, KEY_ID),
+						parser.getValue(e, KEY_NAME), parser.getValue(e,
+								KEY_COOR)));
+				}
+			}
+		}
+	}
 
-			double lat = (latitudeSpecified - Double
-					.parseDouble(parser.getValue(e, KEY_COST))) * 111.2;
-
-			double dist = Math.sqrt(lat * lat + lon * lon);
-			String distance = Double.toString(dist);
+	public static String getNearestCoord(double latitudeSpecified,
+			double longitudeSpecified) {
+		double min = 30;
+		String nearestCoord = null;
+		for (BusStation station : busStationList) {
+			String[] s = station.getCoord().split(",");
+			double latitude = Double.parseDouble(s[1]);
+			double longitude = Double.parseDouble(s[0]);
+			double latDist = (latitudeSpecified - latitude) * 111.2;
+			double lngDist = (longitudeSpecified - longitude) * 111.2;
+			double dist = Math.sqrt(latDist * latDist + lngDist * lngDist);
 			if (dist < min) {
 				min = dist;
-				latitude = Double.parseDouble(parser.getValue(e, KEY_COST));
-				longitude = Double.parseDouble(parser.getValue(e, KEY_DESC));
+				nearestCoord = station.getCoord();
+				id = station.getId();
 			}
-			map.put(KEY_DIST, distance + " km");
-			// adding HashList to ArrayList
-			menuItems.add(map);
 
 		}
 
-		// Adding menuItems to ListView
+		return nearestCoord;
+	}
 
+	public static String getNearestID() {
+		return id;
 	}
 	
-	
-
-
-	public static double getNearestLat() {
-		return latitude;
-	}
-
-	public static double getNearestLon() {
-		return longitude;
-	}
-	
-	public static double getNearestDestLat() {
-		return latitude;
-	}
-
-	public static double getNearestDestLon() {
-		return longitude;
-	}
-
-	public static ArrayList<HashMap<String, String>> getValues() {
-		return menuItems;
+	public static List<BusStation> getValues(){
+		return busStationList;
 	}
 }

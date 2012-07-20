@@ -25,8 +25,9 @@ public final class R {
     }
     public static final class id {
         public static final int bus=0x7f060004;
+        public static final int bus_l=0x7f060007;
         public static final int cost=0x7f060001;
-        public static final int exit=0x7f060007;
+        public static final int exit=0x7f060008;
         public static final int help=0x7f060003;
         public static final int name=0x7f060000;
         public static final int near=0x7f060005;
@@ -44,6 +45,7 @@ public final class R {
     public static final class string {
         public static final int app_name=0x7f040003;
         public static final int bus=0x7f040004;
+        public static final int busl=0x7f040008;
         public static final int dest=0x7f040006;
         public static final int exit=0x7f040005;
         public static final int hello=0x7f040000;
