@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mapsforge.core.GeoPoint;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -19,15 +20,15 @@ public class AndroidXMLParsing {
 	static final String KEY_COOR = "coordinates";
 	static final String KEY_HIGH = "highway";
 	static final String KEY_AMEN = "amenity";
+	static final String KEY_RAIL = "railway";
 	static final String KEY_DIST = "dist";
 	static int i;
 	static NodeList nl;
 	static String id;
-	static List<BusStation> busStationList = new ArrayList<BusStation>();
+	static List<BusStation> busStationList;
 
 
 	public static void parseBusStations() {
-		busStationList.clear();
 		XMLParser parser = new XMLParser();
 		String xml = null;
 		try {
@@ -40,12 +41,13 @@ public class AndroidXMLParsing {
 
 		nl = doc.getElementsByTagName(KEY_ITEM);
 		// looping through all item nodes <item>
+		busStationList = new ArrayList<BusStation>();
 		for (i = 0; i < nl.getLength(); i++) {
 			// creating new HashMap
 			Element e = (Element) nl.item(i);
 			if (parser.getValue(e, KEY_HIGH).equals("bus_stop")
 					|| parser.getValue(e, KEY_AMEN).equals("bus_station")
-					|| parser.getValue(e, KEY_AMEN).equals("tram_stop")) {
+					|| parser.getValue(e, KEY_RAIL).equals("tram_stop")) {
 				// adding each child node to HashMap key => value
 				{busStationList.add( new BusStation(parser.getValue(e, KEY_ID),
 						parser.getValue(e, KEY_NAME), parser.getValue(e,
@@ -55,26 +57,28 @@ public class AndroidXMLParsing {
 		}
 	}
 
-	public static String getNearestCoord(double latitudeSpecified,
-			double longitudeSpecified) {
-		double min = 30;
-		String nearestCoord = null;
+	public static GeoPoint getNearestCoord(GeoPoint a) {
+		double min = distance(busStationList.get(0).busStationLocation(),a);
+		GeoPoint nearestCoord = busStationList.get(0).busStationLocation();
 		for (BusStation station : busStationList) {
-			String[] s = station.getCoord().split(",");
-			double latitude = Double.parseDouble(s[1]);
-			double longitude = Double.parseDouble(s[0]);
-			double latDist = (latitudeSpecified - latitude) * 111.2;
-			double lngDist = (longitudeSpecified - longitude) * 111.2;
-			double dist = Math.sqrt(latDist * latDist + lngDist * lngDist);
+			double dist = distance(station.busStationLocation(),a);
 			if (dist < min) {
 				min = dist;
-				nearestCoord = station.getCoord();
+				nearestCoord = station.busStationLocation();
 				id = station.getId();
 			}
 
 		}
 
 		return nearestCoord;
+	}
+	
+	private static double distance(GeoPoint a, GeoPoint b)
+	{
+		double latDist = (a.getLatitude() - b.getLatitude()) * 111.2;
+		double lngDist = (a.getLongitude() - b.getLongitude()) * 111.2;
+		double dist = Math.sqrt(latDist * latDist + lngDist * lngDist);
+		return dist;
 	}
 
 	public static String getNearestID() {

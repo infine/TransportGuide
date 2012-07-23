@@ -1,14 +1,19 @@
 package com.map.app;
 
+import org.mapsforge.core.GeoPoint;
+
 public class BusStation {
 	private String id;
 	private String name;
-	private String coord;
+	private double latitude;
+	private double longitude;
 
 	public BusStation(String BusStaID, String BusStaName, String BusStaCoord) {
 		this.setId(BusStaID);
 		this.setName(BusStaName);
-		this.setCoord(BusStaCoord);
+		String[] s = BusStaCoord.split(",");
+        this.latitude = Double.parseDouble(s[1]);
+        this.longitude = Double.parseDouble(s[0]);
 	}
 
 	public String getId() {
@@ -27,17 +32,15 @@ public class BusStation {
 		this.name = name;
 	}
 
-	public String getCoord() {
-		return coord;
-	}
-
-	public void setCoord(String coord) {
-		this.coord = coord;
-	}
-
 	@Override
 	public String toString() {
 		return name;
 	}
+	
+	public GeoPoint busStationLocation()
+	{
+		return new GeoPoint(latitude,longitude);
+	}
+	
 
 }

@@ -55,7 +55,6 @@ public class MapApplicationActivity extends MapActivity implements
 
 		setContentView(mapView);
 		activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-		System.out.println("***before: " + getFreeMemory() + "MB");
 		AndroidXMLParsing.parseBusStations();
 
 		// Get the location manager
@@ -97,7 +96,6 @@ public class MapApplicationActivity extends MapActivity implements
 		mapView.setCenter(geoPoint1);
 		final MapController mc = mapView.getController();
 		mc.setZoom(16);
-		System.out.println("***after: " + getFreeMemory() + "MB");
 
 	}
 
@@ -120,7 +118,6 @@ public class MapApplicationActivity extends MapActivity implements
 
 	@Override
 	public void onLocationChanged(Location location) {
-		System.out.println("***before: " + getFreeMemory() + "MB");
 		lat = location.getLatitude();
 		lng = location.getLongitude();
 		mapView.getOverlays().remove(itemizedOverlay);
@@ -140,7 +137,8 @@ public class MapApplicationActivity extends MapActivity implements
 		itemizedOverlay.addItem(item1);
 		// add both Overlays to the MapView
 		mapView.getOverlays().add(itemizedOverlay);
-		System.out.println("***after: " + getFreeMemory() + "MB");
+		Toast.makeText(this, "Latitude = " + lat + "Longitude = " + lng,
+				Toast.LENGTH_LONG);
 
 	}
 
@@ -211,9 +209,8 @@ public class MapApplicationActivity extends MapActivity implements
 			return true;
 		case R.id.near:
 			mapView.getOverlays().remove(itemizedOverlay2);
-			String s[] = AndroidXMLParsing.getNearestCoord(lat, lng).split(",");
-			GeoPoint geoPoint2 = new GeoPoint(Double.parseDouble(s[1]),
-					Double.parseDouble(s[0]));
+			GeoPoint geoLocation = new GeoPoint(lat, lng);
+			GeoPoint geoPoint2 = AndroidXMLParsing.getNearestCoord(geoLocation);
 			OverlayItem item2 = new OverlayItem(geoPoint2, "Point",
 					"nearest Station");
 			Paint paint = new Paint();
@@ -233,10 +230,7 @@ public class MapApplicationActivity extends MapActivity implements
 			return true;
 		case R.id.neardest:
 			mapView.getOverlays().remove(itemizedOverlay3);
-			String s1[] = AndroidXMLParsing.getNearestCoord(p.getLatitude(),
-					p.getLongitude()).split(",");
-			GeoPoint geoPoint3 = new GeoPoint(Double.parseDouble(s1[1]),
-					Double.parseDouble(s1[0]));
+			GeoPoint geoPoint3 = AndroidXMLParsing.getNearestCoord(p);
 			OverlayItem item3 = new OverlayItem(geoPoint3, "Point",
 					"nearest Station");
 			Paint paint1 = new Paint();
