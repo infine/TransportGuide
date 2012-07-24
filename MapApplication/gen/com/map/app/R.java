@@ -12,21 +12,26 @@ public final class R {
     }
     public static final class drawable {
         public static final int btn_star=0x7f020000;
-        public static final int ic_bus=0x7f020001;
-        public static final int ic_buss=0x7f020002;
-        public static final int ic_exit=0x7f020003;
-        public static final int ic_help=0x7f020004;
-        public static final int ic_launcher=0x7f020005;
-        public static final int ic_near=0x7f020006;
-        public static final int ic_refresh=0x7f020007;
+        public static final int btn_star_red=0x7f020001;
+        public static final int ic_bus=0x7f020002;
+        public static final int ic_buss=0x7f020003;
+        public static final int ic_buss_red=0x7f020004;
+        public static final int ic_dest_near=0x7f020005;
+        public static final int ic_exit=0x7f020006;
+        public static final int ic_help=0x7f020007;
+        public static final int ic_launcher=0x7f020008;
+        public static final int ic_near=0x7f020009;
+        public static final int ic_refresh=0x7f02000a;
     }
     public static final class id {
         public static final int bus=0x7f060004;
+        public static final int bus_l=0x7f060007;
         public static final int cost=0x7f060001;
-        public static final int exit=0x7f060006;
+        public static final int exit=0x7f060008;
         public static final int help=0x7f060003;
         public static final int name=0x7f060000;
         public static final int near=0x7f060005;
+        public static final int neardest=0x7f060006;
         public static final int refresh=0x7f060002;
     }
     public static final class layout {
@@ -40,10 +45,12 @@ public final class R {
     public static final class string {
         public static final int app_name=0x7f040003;
         public static final int bus=0x7f040004;
+        public static final int busl=0x7f040008;
+        public static final int dest=0x7f040006;
         public static final int exit=0x7f040005;
         public static final int hello=0x7f040000;
         public static final int help=0x7f040001;
-        public static final int near=0x7f040006;
+        public static final int near=0x7f040007;
         public static final int refresh=0x7f040002;
     }
 }

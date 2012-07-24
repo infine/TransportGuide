@@ -22,6 +22,16 @@
         android:title="@string/near"/>
 
     <item
+        android:id="@+id/neardest"
+        android:icon="@drawable/ic_dest_near"
+        android:title="@string/dest"/>
+
+    <item
+        android:id="@+id/bus_l"
+        android:icon="@drawable/ic_dest_near"
+        android:title="@string/busl"/>
+
+    <item
         android:id="@+id/exit"
         android:icon="@drawable/ic_exit"
         android:title="@string/exit"/>
