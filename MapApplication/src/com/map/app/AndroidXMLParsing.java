@@ -2,6 +2,7 @@ package com.map.app;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.mapsforge.core.GeoPoint;
@@ -26,6 +27,7 @@ public class AndroidXMLParsing {
 	static NodeList nl;
 	static String id;
 	static List<BusStation> busStationList;
+	static HashMap<String, BusStation> busStationMap = new HashMap<String, BusStation>();
 
 
 	public static void parseBusStations() {
@@ -55,6 +57,10 @@ public class AndroidXMLParsing {
 				}
 			}
 		}
+		for (BusStation station : busStationList) {
+			busStationMap.put(station.getId(), station);
+		}
+		
 	}
 
 	public static GeoPoint getNearestCoord(GeoPoint a) {
@@ -81,8 +87,12 @@ public class AndroidXMLParsing {
 		return dist;
 	}
 
-	public static String getNearestID() {
-		return id;
+	public static BusStation getNearestID() {
+		return busStationMap.get(id);
+	}
+	
+	public static HashMap<String,BusStation> getHashedValues(){
+		return busStationMap;
 	}
 	
 	public static List<BusStation> getValues(){

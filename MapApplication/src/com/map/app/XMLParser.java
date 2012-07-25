@@ -8,6 +8,8 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -128,5 +130,14 @@ public class XMLParser {
 	public String getValue(Element item, String str) {
 		NodeList n = item.getElementsByTagName(str);
 		return this.getElementValue(n.item(0));
+	}
+	
+
+	public List<String> getValues(Element item, String str) {
+		NodeList n = item.getElementsByTagName(str);
+		List<String> st = new ArrayList<String>();
+		for(int i=0;i<n.getLength();i++)
+			st.add(this.getElementValue(n.item(i)));
+		return st;
 	}
 }

@@ -3,6 +3,7 @@ package com.map.app;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -18,13 +19,14 @@ public class AndroidXMLParsingBus {
 	static final String KEY_STATION = "ref";
 	static final String KEY_NAME = "name";
 	static NodeList nl;
-	static ArrayList<HashMap<String, String>> menuItems = new ArrayList<HashMap<String, String>>();
+	static List<BusLines> busLinesList = new ArrayList<BusLines>();
+	static HashMap<String, BusStation> busStationMap = AndroidXMLParsing.getHashedValues();
 
-	public static void read(String id) {
-		menuItems.removeAll(menuItems);
+	public static void parseBusLines() {
+		busLinesList.removeAll(busLinesList);
 		XMLParser parser = new XMLParser();
 		String xml = null;
-
+	
 		try {
 			xml = XMLParser.getXmlFromUrl(URL);
 		} catch (MalformedURLException e1) {
@@ -37,21 +39,31 @@ public class AndroidXMLParsingBus {
 		// looping through all item nodes <item>
 		for (int i = 0; i < nl.getLength(); i++) {
 			// creating new HashMap
-
 			Element e = (Element) nl.item(i);
+			BusLines line = new BusLines(parser.getValue(e, KEY_ID),
+					parser.getValue(e, KEY_NAME));
+
 			// adding each child node to HashMap key => value
-			while (parser.getValue(e, KEY_STATION) != null) {
-				if (id.equals(parser.getValue(e, KEY_STATION))) {
-					HashMap<String, String> map = new HashMap<String, String>();
-					map.put(KEY_NAME, parser.getValue(e, KEY_NAME));
-					map.put(KEY_ID, parser.getValue(e, KEY_ID));
-					menuItems.add(map);
-				}
+			List<String> st = parser.getValues(e, KEY_STATION);
+			int j = 0;
+			int m = st.size();
+		    while(j<m){
+		    	if(busStationMap.get(st.get(j))!=null)
+		    	line.addBusStation(busStationMap.get(st.get(j)));
+		    	j++;
+		    }
+			busLinesList.add(line);
+		}
+
+		for (BusLines line : busLinesList) {
+			for (BusStation station : line.getStations()) {
+				station.addLines(line);
 			}
 		}
+
 	}
 
-	public static ArrayList<HashMap<String, String>> getValues() {
-		return menuItems;
+	public static List<BusLines> getValues() {
+		return busLinesList;
 	}
 }

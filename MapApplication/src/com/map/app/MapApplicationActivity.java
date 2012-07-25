@@ -20,8 +20,6 @@ import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
 import org.mapsforge.android.maps.overlay.OverlayItem;
 
-import android.app.ActivityManager;
-import android.app.ActivityManager.MemoryInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -42,8 +40,6 @@ public class MapApplicationActivity extends MapActivity implements
 	private ArrayItemizedOverlay itemizedOverlay5;
 	private static GeoPoint p;
 	private GeoPoint geoPoint1, geoPoint4;
-	MemoryInfo mi = new MemoryInfo();
-	ActivityManager activityManager;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -54,8 +50,8 @@ public class MapApplicationActivity extends MapActivity implements
 		mapView.setOnTouchListener(this);
 
 		setContentView(mapView);
-		activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
 		AndroidXMLParsing.parseBusStations();
+		AndroidXMLParsingBus.parseBusLines();
 
 		// Get the location manager
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -105,7 +101,6 @@ public class MapApplicationActivity extends MapActivity implements
 		super.onResume();
 		mapView.getOverlays().remove(itemizedOverlay2);
 		locationManager.requestLocationUpdates(provider, 400, 1, this);
-		System.out.println("***" + getFreeMemory() + "MB");
 	}
 
 	/* Remove the locationlistener updates when Activity is paused */
@@ -113,7 +108,6 @@ public class MapApplicationActivity extends MapActivity implements
 	protected void onPause() {
 		super.onPause();
 		locationManager.removeUpdates(this);
-		System.out.println("***" + getFreeMemory() + "MB");
 	}
 
 	@Override
@@ -137,25 +131,7 @@ public class MapApplicationActivity extends MapActivity implements
 		itemizedOverlay.addItem(item1);
 		// add both Overlays to the MapView
 		mapView.getOverlays().add(itemizedOverlay);
-		Toast.makeText(this, "Latitude = " + lat + "Longitude = " + lng,
-				Toast.LENGTH_LONG);
-
-	}
-
-	public static double getLatitude() {
-		return lat;
-	}
-
-	public static double getLongitude() {
-		return lng;
-	}
-
-	public static double getDestLatitude() {
-		return p.getLatitude();
-	}
-
-	public static double getDestLongitude() {
-		return p.getLongitude();
+		
 	}
 
 	@Override
@@ -182,12 +158,6 @@ public class MapApplicationActivity extends MapActivity implements
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.menu, menu);
 		return true;
-	}
-
-	public long getFreeMemory() {
-		activityManager.getMemoryInfo(mi);
-		long availableMegs = mi.availMem / 1048576L;
-		return availableMegs;
 	}
 
 	@Override
@@ -270,7 +240,6 @@ public class MapApplicationActivity extends MapActivity implements
 		// ---when user lifts his finger---
 		if (event.getAction() == 1) {
 			mapView.getOverlays().remove(itemizedOverlay5);
-			System.out.println("***delete" + getFreeMemory() + "MB");
 			p = mapView.getProjection().fromPixels((int) event.getX(),
 					(int) event.getY());
 			geoPoint4 = new GeoPoint(p.getLatitude(), p.getLongitude());
@@ -294,11 +263,19 @@ public class MapApplicationActivity extends MapActivity implements
 
 			// add both Overlays to the MapView
 			mapView.getOverlays().add(itemizedOverlay5);
-			System.out.println("***set" + getFreeMemory() + "MB");
-
 		}
 
 		return false;
+	}
+
+	public static double getLatitude() {
+		// TODO Auto-generated method stub
+		return lat;
+	}
+
+	public static double getLongitude() {
+		// TODO Auto-generated method stub
+		return lng;
 	}
 
 }
