@@ -9,6 +9,8 @@
     <string name="dest">Show Nearest Bus Station from Destination</string>
     <string name="near">Locate The Nearest Station</string>
     <string name="busl">BusLines in the nearest Station</string>
+    <string name="route">Routing Beatween Bus Station</string>
+    <string name="busdestl">Show Bus Lines That Stops in the Destination Station</string>
     
     
     

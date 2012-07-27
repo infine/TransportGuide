@@ -20,6 +20,9 @@ import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
 import org.mapsforge.android.maps.overlay.OverlayItem;
 
+import com.map.reading.BusLinesReading;
+import com.map.reading.BusStationReading;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -28,18 +31,15 @@ import android.graphics.Paint;
 public class MapApplicationActivity extends MapActivity implements
 		LocationListener, OnTouchListener {
 
-	static double lat;
-	static double lng;
+	private static double lat, lng;
 	private String provider;
 	private LocationManager locationManager;
 	private MapView mapView;
 	private OverlayItem item1, item4;
-	private ArrayItemizedOverlay itemizedOverlay;
-	private ArrayItemizedOverlay itemizedOverlay2;
-	private ArrayItemizedOverlay itemizedOverlay3;
-	private ArrayItemizedOverlay itemizedOverlay5;
-	private static GeoPoint p;
-	private GeoPoint geoPoint1, geoPoint4;
+	private ArrayItemizedOverlay itemizedOverlay, itemizedOverlay2,
+			itemizedOverlay3, itemizedOverlay5;
+	private static GeoPoint p, geoPoint1, geoPoint4;
+	private static int getMenuItem;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -50,8 +50,8 @@ public class MapApplicationActivity extends MapActivity implements
 		mapView.setOnTouchListener(this);
 
 		setContentView(mapView);
-		AndroidXMLParsing.parseBusStations();
-		AndroidXMLParsingBus.parseBusLines();
+		BusStationReading.parseBusStations();
+		BusLinesReading.parseBusLines();
 
 		// Get the location manager
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -131,12 +131,6 @@ public class MapApplicationActivity extends MapActivity implements
 		itemizedOverlay.addItem(item1);
 		// add both Overlays to the MapView
 		mapView.getOverlays().add(itemizedOverlay);
-		
-	}
-
-	@Override
-	public void onStatusChanged(String provider, int status, Bundle extras) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -174,13 +168,13 @@ public class MapApplicationActivity extends MapActivity implements
 			return true;
 		case R.id.bus:
 			Intent in = new Intent(getApplicationContext(),
-					AndroidXMLParsingActivity.class);
+					BusStationDisplayActivity.class);
 			startActivity(in);
 			return true;
 		case R.id.near:
 			mapView.getOverlays().remove(itemizedOverlay2);
 			GeoPoint geoLocation = new GeoPoint(lat, lng);
-			GeoPoint geoPoint2 = AndroidXMLParsing.getNearestCoord(geoLocation);
+			GeoPoint geoPoint2 = BusStationReading.getNearestCoord(geoLocation);
 			OverlayItem item2 = new OverlayItem(geoPoint2, "Point",
 					"nearest Station");
 			Paint paint = new Paint();
@@ -200,7 +194,7 @@ public class MapApplicationActivity extends MapActivity implements
 			return true;
 		case R.id.neardest:
 			mapView.getOverlays().remove(itemizedOverlay3);
-			GeoPoint geoPoint3 = AndroidXMLParsing.getNearestCoord(p);
+			GeoPoint geoPoint3 = BusStationReading.getNearestCoord(p);
 			OverlayItem item3 = new OverlayItem(geoPoint3, "Point",
 					"nearest Station");
 			Paint paint1 = new Paint();
@@ -219,9 +213,21 @@ public class MapApplicationActivity extends MapActivity implements
 			mapView.getOverlays().add(itemizedOverlay3);
 			return true;
 		case R.id.bus_l:
+			getMenuItem = 1;
 			Intent in1 = new Intent(getApplicationContext(),
-					AndroidXMLBusParsingActivity.class);
+					BusLinesDisplayActivity.class);
 			startActivity(in1);
+			return true;
+		case R.id.bus_dest_l:
+			getMenuItem = 2;
+			Intent in2 = new Intent(getApplicationContext(),
+					BusLinesDisplayActivity.class);
+			startActivity(in2);
+			return true;
+		case R.id.route:
+			Intent in3 = new Intent(getApplicationContext(),
+					RouteActivity.class);
+			startActivity(in3);
 			return true;
 		case R.id.exit:
 			finish();
@@ -268,14 +274,29 @@ public class MapApplicationActivity extends MapActivity implements
 		return false;
 	}
 
+	public static int getPressedMenu() {
+		return getMenuItem;
+	}
+	
 	public static double getLatitude() {
-		// TODO Auto-generated method stub
 		return lat;
 	}
 
 	public static double getLongitude() {
-		// TODO Auto-generated method stub
 		return lng;
+	}
+
+	public static double getDestlatitude() {
+		return p.getLatitude();
+	}
+
+	public static double getDestLongitude() {
+		return p.getLongitude();
+	}
+
+	@Override
+	public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
+
 	}
 
 }
