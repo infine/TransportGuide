@@ -25,8 +25,6 @@ import com.map.reading.BusStationReading;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Paint;
 
 public class MapApplicationActivity extends MapActivity implements
 		LocationListener, OnTouchListener {
@@ -35,11 +33,14 @@ public class MapApplicationActivity extends MapActivity implements
 	private String provider;
 	private LocationManager locationManager;
 	private MapView mapView;
-	private OverlayItem item1, item4;
-	private ArrayItemizedOverlay itemizedOverlay, itemizedOverlay2,
-			itemizedOverlay3, itemizedOverlay5;
-	private static GeoPoint p, geoPoint1, geoPoint4;
-	private static int getMenuItem;
+	private OverlayItem locationItem, destinationLocationItem,
+			nearestStationLocationItem, nearestStationFromDestItem;
+	private ArrayItemizedOverlay displayCurentLocation,
+			displayNearestStationLocation,
+			displayNearestStationFromDestination, displayDestinationLocation;
+	private static GeoPoint projectionOfDestination, curentLocation,
+			destinationLocation, nearestStationLocation,
+			nearestStationFromDestination;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -68,28 +69,17 @@ public class MapApplicationActivity extends MapActivity implements
 			lng = location.getLongitude();
 		}
 		// create some points to be shown on top of the map
-		geoPoint1 = new GeoPoint(lat, lng);
-
-		item1 = new OverlayItem(geoPoint1, "Point", "here you are");
-
-		// create the paint object for the RouteOverlay and set all parameters
-		Paint paint = new Paint();
-		paint.setStyle(Paint.Style.STROKE);
-		paint.setColor(Color.BLUE);
-		paint.setAlpha(128);
-		paint.setStrokeWidth(6);
-		paint.setStrokeCap(Paint.Cap.ROUND);
-		paint.setStrokeJoin(Paint.Join.ROUND);
-
+		curentLocation = new GeoPoint(lat, lng);
+		locationItem = new OverlayItem(curentLocation, "Point", "here you are");
 		// create the ItemizedOverlay and set the items
-		itemizedOverlay = new ArrayItemizedOverlay(getResources().getDrawable(
-				R.drawable.btn_star));
-		itemizedOverlay.addItem(item1);
+		displayCurentLocation = new ArrayItemizedOverlay(getResources()
+				.getDrawable(R.drawable.btn_star));
+		displayCurentLocation.addItem(locationItem);
 		// itemizedOverlay.addItem(item2);
 
 		// add both Overlays to the MapView
-		mapView.getOverlays().add(itemizedOverlay);
-		mapView.setCenter(geoPoint1);
+		mapView.getOverlays().add(displayCurentLocation);
+		mapView.setCenter(curentLocation);
 		final MapController mc = mapView.getController();
 		mc.setZoom(16);
 
@@ -99,7 +89,7 @@ public class MapApplicationActivity extends MapActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		mapView.getOverlays().remove(itemizedOverlay2);
+		mapView.getOverlays().remove(displayNearestStationLocation);
 		locationManager.requestLocationUpdates(provider, 400, 1, this);
 	}
 
@@ -114,23 +104,18 @@ public class MapApplicationActivity extends MapActivity implements
 	public void onLocationChanged(Location location) {
 		lat = location.getLatitude();
 		lng = location.getLongitude();
-		mapView.getOverlays().remove(itemizedOverlay);
+		mapView.getOverlays().remove(displayCurentLocation);
+		mapView.getOverlays().remove(displayNearestStationLocation);
+		mapView.getOverlays().remove(displayNearestStationFromDestination);
+		mapView.getOverlays().remove(displayDestinationLocation);
 		GeoPoint geoPoint1 = new GeoPoint(lat, lng);
 		OverlayItem item1 = new OverlayItem(geoPoint1, "Point", "here you are");
-		Paint paint = new Paint();
-		paint.setStyle(Paint.Style.STROKE);
-		paint.setColor(Color.BLUE);
-		paint.setAlpha(128);
-		paint.setStrokeWidth(6);
-		paint.setStrokeCap(Paint.Cap.ROUND);
-		paint.setStrokeJoin(Paint.Join.ROUND);
-
 		// create the ItemizedOverlay and set the items
-		itemizedOverlay = new ArrayItemizedOverlay(getResources().getDrawable(
-				R.drawable.btn_star));
-		itemizedOverlay.addItem(item1);
+		displayCurentLocation = new ArrayItemizedOverlay(getResources()
+				.getDrawable(R.drawable.btn_star));
+		displayCurentLocation.addItem(item1);
 		// add both Overlays to the MapView
-		mapView.getOverlays().add(itemizedOverlay);
+		mapView.getOverlays().add(displayCurentLocation);
 
 	}
 
@@ -159,8 +144,8 @@ public class MapApplicationActivity extends MapActivity implements
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.refresh:
-			Location location = locationManager.getLastKnownLocation(provider);
-			onLocationChanged(location);
+			mapView.getOverlays().remove(displayNearestStationLocation);
+			locationManager.requestLocationUpdates(provider, 400, 1, this);
 			return true;
 		case R.id.help:
 			Toast.makeText(this, "Aici este meniul Help", Toast.LENGTH_SHORT)
@@ -172,56 +157,45 @@ public class MapApplicationActivity extends MapActivity implements
 			startActivity(in);
 			return true;
 		case R.id.near:
-			mapView.getOverlays().remove(itemizedOverlay2);
-			GeoPoint geoLocation = new GeoPoint(lat, lng);
-			GeoPoint geoPoint2 = BusStationReading.getNearestCoord(geoLocation);
-			OverlayItem item2 = new OverlayItem(geoPoint2, "Point",
-					"nearest Station");
-			Paint paint = new Paint();
-			paint.setStyle(Paint.Style.STROKE);
-			paint.setColor(Color.BLUE);
-			paint.setAlpha(128);
-			paint.setStrokeWidth(6);
-			paint.setStrokeCap(Paint.Cap.ROUND);
-			paint.setStrokeJoin(Paint.Join.ROUND);
+			mapView.getOverlays().remove(displayNearestStationLocation);
+			nearestStationLocation = BusStationReading
+					.getNearestStation(curentLocation);
+			nearestStationLocationItem = new OverlayItem(
+					nearestStationLocation, "Point", "nearest Station");
 
 			// create the ItemizedOverlay and set the items
-			itemizedOverlay2 = new ArrayItemizedOverlay(getResources()
-					.getDrawable(R.drawable.ic_buss));
-			itemizedOverlay2.addItem(item2);
+			displayNearestStationLocation = new ArrayItemizedOverlay(
+					getResources().getDrawable(R.drawable.ic_buss));
+			displayNearestStationLocation.addItem(nearestStationLocationItem);
 			// add both Overlays to the MapView
-			mapView.getOverlays().add(itemizedOverlay2);
+			mapView.getOverlays().add(displayNearestStationLocation);
 			return true;
 		case R.id.neardest:
-			mapView.getOverlays().remove(itemizedOverlay3);
-			GeoPoint geoPoint3 = BusStationReading.getNearestCoord(p);
-			OverlayItem item3 = new OverlayItem(geoPoint3, "Point",
-					"nearest Station");
-			Paint paint1 = new Paint();
-			paint1.setStyle(Paint.Style.STROKE);
-			paint1.setColor(Color.BLUE);
-			paint1.setAlpha(128);
-			paint1.setStrokeWidth(6);
-			paint1.setStrokeCap(Paint.Cap.ROUND);
-			paint1.setStrokeJoin(Paint.Join.ROUND);
-
+			mapView.getOverlays().remove(displayNearestStationFromDestination);
+			nearestStationFromDestination = BusStationReading
+					.getNearestStation(destinationLocation);
+			nearestStationFromDestItem = new OverlayItem(
+					nearestStationFromDestination, "Point", "nearest Station");
 			// create the ItemizedOverlay and set the items
-			itemizedOverlay3 = new ArrayItemizedOverlay(getResources()
-					.getDrawable(R.drawable.ic_buss_red));
-			itemizedOverlay3.addItem(item3);
+			displayNearestStationFromDestination = new ArrayItemizedOverlay(
+					getResources().getDrawable(R.drawable.ic_buss_red));
+			displayNearestStationFromDestination
+					.addItem(nearestStationFromDestItem);
 			// add both Overlays to the MapView
-			mapView.getOverlays().add(itemizedOverlay3);
+			mapView.getOverlays().add(displayNearestStationFromDestination);
 			return true;
 		case R.id.bus_l:
-			getMenuItem = 1;
 			Intent in1 = new Intent(getApplicationContext(),
 					BusLinesDisplayActivity.class);
+			in1.putExtra("location", new Double[] { lat, lng });
 			startActivity(in1);
 			return true;
 		case R.id.bus_dest_l:
-			getMenuItem = 2;
 			Intent in2 = new Intent(getApplicationContext(),
 					BusLinesDisplayActivity.class);
+			in2.putExtra("location",
+					new Double[] { projectionOfDestination.getLatitude(),
+							projectionOfDestination.getLongitude() });
 			startActivity(in2);
 			return true;
 		case R.id.route:
@@ -245,53 +219,33 @@ public class MapApplicationActivity extends MapActivity implements
 
 		// ---when user lifts his finger---
 		if (event.getAction() == 1) {
-			mapView.getOverlays().remove(itemizedOverlay5);
-			p = mapView.getProjection().fromPixels((int) event.getX(),
-					(int) event.getY());
-			geoPoint4 = new GeoPoint(p.getLatitude(), p.getLongitude());
-			item4 = new OverlayItem(geoPoint4, "Point", "here you are");
-
-			// create the paint object for the RouteOverlay and set all
-			// parameters
-			Paint paint = new Paint();
-			paint.setStyle(Paint.Style.STROKE);
-			paint.setColor(Color.BLUE);
-			paint.setAlpha(128);
-			paint.setStrokeWidth(6);
-			paint.setStrokeCap(Paint.Cap.ROUND);
-			paint.setStrokeJoin(Paint.Join.ROUND);
-
+			mapView.getOverlays().remove(displayDestinationLocation);
+			projectionOfDestination = mapView.getProjection().fromPixels(
+					(int) event.getX(), (int) event.getY());
+			destinationLocation = new GeoPoint(
+					projectionOfDestination.getLatitude(),
+					projectionOfDestination.getLongitude());
+			destinationLocationItem = new OverlayItem(destinationLocation,
+					"Point", "here you are");
 			// create the ItemizedOverlay and set the items
-			itemizedOverlay5 = new ArrayItemizedOverlay(getResources()
-					.getDrawable(R.drawable.btn_star_red));
-			itemizedOverlay5.addItem(item4);
+			displayDestinationLocation = new ArrayItemizedOverlay(
+					getResources().getDrawable(R.drawable.btn_star_red));
+			displayDestinationLocation.addItem(destinationLocationItem);
 			// itemizedOverlay.addItem(item2);
 
 			// add both Overlays to the MapView
-			mapView.getOverlays().add(itemizedOverlay5);
+			mapView.getOverlays().add(displayDestinationLocation);
 		}
 
 		return false;
 	}
 
-	public static int getPressedMenu() {
-		return getMenuItem;
-	}
-	
-	public static double getLatitude() {
-		return lat;
+	public static GeoPoint getCurentLocation() {
+		return curentLocation;
 	}
 
-	public static double getLongitude() {
-		return lng;
-	}
-
-	public static double getDestlatitude() {
-		return p.getLatitude();
-	}
-
-	public static double getDestLongitude() {
-		return p.getLongitude();
+	public static GeoPoint getDestination() {
+		return destinationLocation;
 	}
 
 	@Override
