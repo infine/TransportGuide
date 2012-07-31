@@ -42,7 +42,6 @@ public class MapApplicationActivity extends MapActivity implements
 	private static GeoPoint projectionOfDestination, curentLocation,
 			destinationLocation, nearestStationLocation,
 			nearestStationFromDestination;
-	private static int pressedMenu;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -187,28 +186,29 @@ public class MapApplicationActivity extends MapActivity implements
 			mapView.getOverlays().add(displayNearestStationFromDestination);
 			return true;
 		case R.id.bus_l:
-			pressedMenu = 0;
 			Intent in1 = new Intent(getApplicationContext(),
 					BusLinesDisplayActivity.class);
-			in1.putExtra("location", new Double[] { lat, lng });
+			in1.putExtra("latitude", lat);
+			in1.putExtra("longitude", lng);
 			startActivity(in1);
 			return true;
 		case R.id.bus_dest_l:
-			pressedMenu = 1;
 			Intent in2 = new Intent(getApplicationContext(),
 					BusLinesDisplayActivity.class);
-			in2.putExtra("location",
-					new Double[] { projectionOfDestination.getLatitude(),
-							projectionOfDestination.getLongitude() });
+			in2.putExtra("latitude", destinationLocation.getLatitude());
+			in2.putExtra("longitude", destinationLocation.getLongitude());
 			startActivity(in2);
 			return true;
 		case R.id.route:
-			if(Routing.getValues().size()!=0){
-			Intent in3 = new Intent(getApplicationContext(),
-					RouteActivity.class);
-			startActivity(in3);
+			Routing.route();
+			if (Routing.getValues().size() != 0) {
+				Intent in3 = new Intent(getApplicationContext(),
+						RouteActivity.class);
+				startActivity(in3);
 			} else
-				Toast.makeText(getApplicationContext(), "To few information to display a route", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(),
+						"To few information to display a route",
+						Toast.LENGTH_SHORT).show();
 			return true;
 		case R.id.exit:
 			finish();
@@ -259,9 +259,4 @@ public class MapApplicationActivity extends MapActivity implements
 	public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
 
 	}
-
-	public static int getPressedMenu() {
-		return pressedMenu;
-	}
-
 }

@@ -16,18 +16,19 @@ public class BusLinesDisplayActivity extends ListActivity {
 	private List<BusLines> menuItems;
 	private BusStation nearestBusStation;
 	private ArrayAdapter<BusLines> arrayAdapter;
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main1);
 		GeoPoint b;
+		Bundle extras = getIntent().getExtras();
 
-		if (MapApplicationActivity.getPressedMenu() == 0)
-			b = MapApplicationActivity.getCurentLocation();
-		else {
-			b = MapApplicationActivity.getDestination();
-		}
+        double lat = extras.getDouble("latitude");
+        double lng = extras.getDouble("longitude");
+        
+        b = new GeoPoint(lat,lng);
 
 		BusStationReading.getNearestStation(b);
 		nearestBusStation = BusStationReading.getNearestID();

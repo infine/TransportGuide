@@ -25,6 +25,9 @@ public class BusStationReading {
 	private static final String KEY_HIGH = "highway";
 	private static final String KEY_AMEN = "amenity";
 	private static final String KEY_RAIL = "railway";
+	private final static String BUS = "bus_stop";
+	private final static String STATION = "bus_station";
+	private final static String TRAM = "tram_stop";
 	private static int i;
 	private static NodeList nl;
 	private static String id;
@@ -48,9 +51,9 @@ public class BusStationReading {
 		for (i = 0; i < nl.getLength(); i++) {
 			// creating new HashMap
 			Element e = (Element) nl.item(i);
-			if (parser.getValue(e, KEY_HIGH).equals("bus_stop")
-					|| parser.getValue(e, KEY_AMEN).equals("bus_station")
-					|| parser.getValue(e, KEY_RAIL).equals("tram_stop")) {
+			if (parser.getValue(e, KEY_HIGH).equals(BUS)
+					|| parser.getValue(e, KEY_AMEN).equals(STATION)
+					|| parser.getValue(e, KEY_RAIL).equals(TRAM)) {
 				// adding each child node to HashMap key => value
 				{
 					busStationList.add(new BusStation(parser
@@ -82,8 +85,9 @@ public class BusStationReading {
 	}
 
 	public static double distance(GeoPoint a, GeoPoint b) {
-		double latDist = (a.getLatitude() - b.getLatitude()) * 111.2;
-		double lngDist = (a.getLongitude() - b.getLongitude()) * 111.2;
+		double DEGREE_LENGTH = 111.2;
+		double latDist = (a.getLatitude() - b.getLatitude()) * DEGREE_LENGTH;
+		double lngDist = (a.getLongitude() - b.getLongitude()) * DEGREE_LENGTH;
 		double dist = Math.sqrt(latDist * latDist + lngDist * lngDist);
 		return dist;
 	}
