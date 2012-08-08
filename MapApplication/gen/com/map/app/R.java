@@ -42,6 +42,7 @@ public final class R {
         public static final int list_item=0x7f030000;
         public static final int main=0x7f030001;
         public static final int main1=0x7f030002;
+        public static final int main2=0x7f030003;
     }
     public static final class menu {
         public static final int menu=0x7f060000;
@@ -51,6 +52,9 @@ public final class R {
         public static final int bus=0x7f040004;
         public static final int busdestl=0x7f04000a;
         public static final int busl=0x7f040008;
+        public static final int changes_changed=0x7f04000c;
+        public static final int changes_created=0x7f04000b;
+        public static final int changes_deleted=0x7f04000d;
         public static final int dest=0x7f040006;
         public static final int exit=0x7f040005;
         public static final int hello=0x7f040000;

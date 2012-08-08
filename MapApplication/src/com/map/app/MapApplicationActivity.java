@@ -20,8 +20,7 @@ import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
 import org.mapsforge.android.maps.overlay.OverlayItem;
 
-import com.map.reading.BusLinesReading;
-import com.map.reading.BusStationReading;
+//import com.map.reading.BusStationReading;
 import com.map.reading.Routing;
 
 import android.content.Context;
@@ -34,14 +33,14 @@ public class MapApplicationActivity extends MapActivity implements
 	private String provider;
 	private LocationManager locationManager;
 	private MapView mapView;
-	private OverlayItem locationItem, destinationLocationItem,
-			nearestStationLocationItem, nearestStationFromDestItem;
+	private OverlayItem locationItem, destinationLocationItem;
+				//,nearestStationLocationItem, nearestStationFromDestItem;
 	private ArrayItemizedOverlay displayCurentLocation,
 			displayNearestStationLocation,
 			displayNearestStationFromDestination, displayDestinationLocation;
 	private static GeoPoint projectionOfDestination, curentLocation,
-			destinationLocation, nearestStationLocation,
-			nearestStationFromDestination;
+			destinationLocation;//, nearestStationLocation,
+		//	nearestStationFromDestination;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -52,8 +51,8 @@ public class MapApplicationActivity extends MapActivity implements
 		mapView.setOnTouchListener(this);
 
 		setContentView(mapView);
-		BusStationReading.parseBusStations();
-		BusLinesReading.parseBusLines();
+		//BusStationReading.parseBusStations();
+		//OSMReading.parseBusLines();
 
 		// Get the location manager
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -153,11 +152,11 @@ public class MapApplicationActivity extends MapActivity implements
 					.show();
 			return true;
 		case R.id.bus:
-			Intent in = new Intent(getApplicationContext(),
-					BusStationDisplayActivity.class);
+			Intent in = new Intent(this,
+					OSMReadingActivity.class);
 			startActivity(in);
 			return true;
-		case R.id.near:
+/*		case R.id.near:
 			mapView.getOverlays().remove(displayNearestStationLocation);
 			nearestStationLocation = BusStationReading
 					.getNearestStation(curentLocation);
@@ -198,7 +197,7 @@ public class MapApplicationActivity extends MapActivity implements
 			in2.putExtra("latitude", destinationLocation.getLatitude());
 			in2.putExtra("longitude", destinationLocation.getLongitude());
 			startActivity(in2);
-			return true;
+			return true;*/
 		case R.id.route:
 			Routing.route();
 			if (Routing.getValues().size() != 0) {

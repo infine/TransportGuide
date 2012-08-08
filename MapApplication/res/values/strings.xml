@@ -3,7 +3,8 @@
 
     <string name="hello">Hello World, MapApplicationActivity!</string>
     <string name="help">Help</string>
-    <string name="refresh">Refresh</string><string name="app_name">MapApplication</string>
+    <string name="refresh">Refresh</string>
+    <string name="app_name">MapApplication</string>
     <string name="bus">Show Bus Stations List</string>
     <string name="exit">Exit</string>
     <string name="dest">Show Nearest Bus Station from Destination</string>
@@ -11,8 +12,7 @@
     <string name="busl">BusLines in the nearest Station</string>
     <string name="route">Routing Beatween Bus Station</string>
     <string name="busdestl">Show Bus Lines That Stops in the Destination Station</string>
-    
-    
-    
-
+    <string name="changes_created">create</string>
+    <string name="changes_changed">change</string>
+    <string name="changes_deleted">delete</string>
 </resources>
