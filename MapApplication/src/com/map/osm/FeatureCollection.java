@@ -1,14 +1,40 @@
 package com.map.osm;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.simpleframework.xml.ElementList;
-import org.simpleframework.xml.Root;
-
-@Root
 public class FeatureCollection {
 
-	@ElementList(entry = "node", inline = true)
-	public List<Node> nodes;
+	public List<BusStation> nodes = new ArrayList<BusStation>();
+
+	public List<BusLine> relations = new ArrayList<BusLine>();
+
+	public FeatureCollection() {
+
+	}
+
+	public void addNode(BusStation nd) {
+		nodes.add(nd);
+	}
+
+	public void addRelation(BusLine rel) {
+		relations.add(rel);
+	}
+
+	public List<BusStation> getNodes() {
+		return nodes;
+	}
+
+	public int CountRelations() {
+		return relations.size();
+	}
+
+	public int CountNodes() {
+		return nodes.size();
+	}
+
+	public List<BusLine> getRelations() {
+		return relations;
+	}
 
 }

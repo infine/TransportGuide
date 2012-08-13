@@ -1,11 +1,19 @@
 package com.map.osm;
 
-import org.simpleframework.xml.Element;
-
-@Element(name = "nd")
 public class ND {
 
-	@Element(required = true)
 	public String ref;
+
+	public ND(String reference) {
+		this.ref = reference;
+	}
+
+	public String getReference() {
+		return ref;
+	}
+
+	public void setReference(String reference) {
+		this.ref = reference;
+	}
 
 }

@@ -21,10 +21,12 @@ import org.mapsforge.android.maps.MapView;
 import org.mapsforge.android.maps.overlay.OverlayItem;
 
 //import com.map.reading.BusStationReading;
+import com.map.reading.BusStationReading;
 import com.map.reading.Routing;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 
 public class MapApplicationActivity extends MapActivity implements
 		LocationListener, OnTouchListener {
@@ -33,17 +35,18 @@ public class MapApplicationActivity extends MapActivity implements
 	private String provider;
 	private LocationManager locationManager;
 	private MapView mapView;
-	private OverlayItem locationItem, destinationLocationItem;
-				//,nearestStationLocationItem, nearestStationFromDestItem;
+	private OverlayItem locationItem, destinationLocationItem,
+			nearestStationLocationItem, nearestStationFromDestItem;
 	private ArrayItemizedOverlay displayCurentLocation,
 			displayNearestStationLocation,
 			displayNearestStationFromDestination, displayDestinationLocation;
 	private static GeoPoint projectionOfDestination, curentLocation,
-			destinationLocation;//, nearestStationLocation,
-		//	nearestStationFromDestination;
+			destinationLocation, nearestStationLocation,
+			nearestStationFromDestination;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		mapView = new MapView(this);
 		mapView.setClickable(true);
 		mapView.setBuiltInZoomControls(true);
@@ -51,8 +54,9 @@ public class MapApplicationActivity extends MapActivity implements
 		mapView.setOnTouchListener(this);
 
 		setContentView(mapView);
-		//BusStationReading.parseBusStations();
-		//OSMReading.parseBusLines();
+		// BusStationReading.parseBusStations();
+		OsmParsing.read();
+		BusStationReading.update();
 
 		// Get the location manager
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -152,11 +156,10 @@ public class MapApplicationActivity extends MapActivity implements
 					.show();
 			return true;
 		case R.id.bus:
-			Intent in = new Intent(this,
-					OSMReadingActivity.class);
+			Intent in = new Intent(this, BusStationDisplayActivity.class);
 			startActivity(in);
 			return true;
-/*		case R.id.near:
+		case R.id.near:
 			mapView.getOverlays().remove(displayNearestStationLocation);
 			nearestStationLocation = BusStationReading
 					.getNearestStation(curentLocation);
@@ -186,28 +189,34 @@ public class MapApplicationActivity extends MapActivity implements
 			return true;
 		case R.id.bus_l:
 			Intent in1 = new Intent(getApplicationContext(),
-					BusLinesDisplayActivity.class);
+					BusLineDisplayActivity.class);
 			in1.putExtra("latitude", lat);
 			in1.putExtra("longitude", lng);
 			startActivity(in1);
 			return true;
 		case R.id.bus_dest_l:
 			Intent in2 = new Intent(getApplicationContext(),
-					BusLinesDisplayActivity.class);
+					BusLineDisplayActivity.class);
 			in2.putExtra("latitude", destinationLocation.getLatitude());
 			in2.putExtra("longitude", destinationLocation.getLongitude());
 			startActivity(in2);
-			return true;*/
+			return true;
 		case R.id.route:
-			Routing.route();
-			if (Routing.getValues().size() != 0) {
-				Intent in3 = new Intent(getApplicationContext(),
-						RouteActivity.class);
-				startActivity(in3);
-			} else
+			if (destinationLocation != null) {
+				Routing.route();
+				if (Routing.getValues().size() != 0) {
+					Intent in3 = new Intent(getApplicationContext(),
+							RouteActivity.class);
+					startActivity(in3);
+				} else
+					Toast.makeText(getApplicationContext(),
+							"To few information to display a route",
+							Toast.LENGTH_SHORT).show();
+			} else {
 				Toast.makeText(getApplicationContext(),
-						"To few information to display a route",
-						Toast.LENGTH_SHORT).show();
+						"The Destination Has Not Been Selected!!",
+						Toast.LENGTH_LONG).show();
+			}
 			return true;
 		case R.id.exit:
 			finish();

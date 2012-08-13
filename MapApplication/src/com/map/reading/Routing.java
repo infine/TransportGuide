@@ -7,8 +7,8 @@ import java.util.List;
 import org.mapsforge.core.GeoPoint;
 
 import com.map.app.MapApplicationActivity;
-import com.map.objects.BusLines;
-import com.map.objects.BusStation;
+import com.map.osm.BusLine;
+import com.map.osm.BusStation;
 
 public class Routing {
 
@@ -34,8 +34,8 @@ public class Routing {
 		BusStation stationB = BusStationReading.getNearestID();
 		System.out.println(b2.getLatitude() + b2.getLongitude());
 
-		if (BusStationReading.distance(stationA.busStationLocation(),
-				stationB.busStationLocation()) > 0.2) {
+		if (BusStationReading.distance(stationA.getLocation(),
+				stationB.getLocation()) > 0.2) {
 			
 			method1(stationA,stationB);
 			
@@ -86,13 +86,13 @@ public class Routing {
 	}
 	
 	private static void method1(BusStation stationA, BusStation stationB){
-		for (BusLines line1 : stationA.getLines())
-			for (BusLines line2 : stationB.getLines()) {
+		for (BusLine line1 : stationA.getLines())
+			for (BusLine line2 : stationB.getLines()) {
 				if (line1.equals(line2)) {
 
-					add(0, stationA.getName(), line1.getName());
+					add(0, stationA.toString(), line1.toString());
 
-					add(1, stationB.getName(), line2.getName());
+					add(1, stationB.toString(), line2.toString());
 
 					add(2, null, null);
 
@@ -103,18 +103,18 @@ public class Routing {
 	
 	private static void method2(BusStation stationA, BusStation stationB)
 	{
-		for (BusLines line1 : stationA.getLines())
-			for (BusLines line2 : stationB.getLines()) {
+		for (BusLine line1 : stationA.getLines())
+			for (BusLine line2 : stationB.getLines()) {
 				for (BusStation station1 : line1.getStations())
 					for (BusStation station2 : line2.getStations()) {
 						if (station2.equals(station1)) {
-							add(0, stationA.getName(), line1.getName());
+							add(0, stationA.toString(), line1.toString());
 
-							add(1, station1.getName(), line1.getName());
+							add(1, station1.toString(), line1.toString());
 
-							add(0, station1.getName(), line2.getName());
+							add(0, station1.toString(), line2.toString());
 
-							add(1, stationB.getName(), line2.getName());
+							add(1, stationB.toString(), line2.toString());
 
 							add(2, null, null);
 
@@ -129,14 +129,14 @@ public class Routing {
 		double min = 10.0;
 		BusStation stationDestA = null;
 		BusStation stationDestB = null;
-		BusLines lineA = null, lineB = null;
-		for (BusLines line1 : stationA.getLines())
-			for (BusLines line2 : stationB.getLines()) {
+		BusLine lineA = null, lineB = null;
+		for (BusLine line1 : stationA.getLines())
+			for (BusLine line2 : stationB.getLines()) {
 				for (BusStation station1 : line1.getStations())
 					for (BusStation station2 : line2.getStations()) {
 						double dist = BusStationReading.distance(
-								station1.busStationLocation(),
-								station2.busStationLocation());
+								station1.getLocation(),
+								station2.getLocation());
 						if (dist < min) {
 							min = dist;
 							stationDestA = station1;
@@ -149,13 +149,13 @@ public class Routing {
 		if (lineA != null) {
 			if (lineB != null) {
 
-				add(0, stationA.getName(), lineA.getName());
+				add(0, stationA.toString(), lineA.toString());
 
-				add(1, stationDestA.getName(), lineA.getName());
+				add(1, stationDestA.toString(), lineA.toString());
 				
-				add(0, stationDestB.getName(), lineB.getName());
+				add(0, stationDestB.toString(), lineB.toString());
 
-				add(1, stationB.getName(), lineB.getName());
+				add(1, stationB.toString(), lineB.toString());
 				
 				add(2,null,null);
 			}

@@ -23,11 +23,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".OSMReadingActivity"
+            android:name=".BusStationDisplayActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".BusLinesDisplayActivity"
+            android:name=".BusLineDisplayActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
