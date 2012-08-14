@@ -1,11 +1,17 @@
 package com.map.osm;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.mapsforge.core.GeoPoint;
 
-public class BusStation {
+public class BusStation implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public String id;
 

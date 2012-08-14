@@ -6,6 +6,7 @@ import android.widget.ArrayAdapter;
 
 import com.map.osm.FeatureCollection;
 import com.map.osm.BusStation;
+import com.map.reading.OsmParsing;
 
 
 public class BusStationDisplayActivity extends ListActivity{

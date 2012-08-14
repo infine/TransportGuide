@@ -34,7 +34,8 @@ public class Routing {
 		BusStation stationB = BusStationReading.getNearestID();
 		System.out.println(b2.getLatitude() + b2.getLongitude());
 
-		if (BusStationReading.distance(stationA.getLocation(),
+		if (BusStationReading.distance(
+				stationA.getLocation(),
 				stationB.getLocation()) > 0.2) {
 			
 			method1(stationA,stationB);

@@ -29,7 +29,10 @@
         android:title="@string/busdestl"/>
     <item
         android:id="@+id/route"
-       android:title="@string/route"/>
+        android:title="@string/route"/>
+    <item
+        android:id="@+id/update"
+        android:title="@string/update"/>
     <item
         android:id="@+id/exit"
         android:title="@string/exit"/>

@@ -1,6 +1,5 @@
 package com.map.app;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.mapsforge.core.GeoPoint;
@@ -23,7 +22,7 @@ public class BusLineDisplayActivity extends ListActivity{
 		double lat = extras.getDouble("latitude");
 		double lon = extras.getDouble("longitude");
 		GeoPoint geoPoint = new GeoPoint(lat, lon);
-		GeoPoint stationLoc = BusStationReading.getNearestStation(geoPoint);
+		BusStationReading.getNearestStation(geoPoint);
 		BusStation busStation = BusStationReading.getNearestID();
 	//	List<BusStation> list = OsmParsing.getData().getNodes();
 		 data = busStation.getLines();

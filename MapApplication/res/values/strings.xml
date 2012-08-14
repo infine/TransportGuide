@@ -15,4 +15,6 @@
     <string name="changes_created">create</string>
     <string name="changes_changed">change</string>
     <string name="changes_deleted">delete</string>
+    <string name="update">Update Informations</string>
+
 </resources>

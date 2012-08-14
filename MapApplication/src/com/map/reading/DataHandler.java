@@ -1,4 +1,4 @@
-package com.map.app;
+package com.map.reading;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;

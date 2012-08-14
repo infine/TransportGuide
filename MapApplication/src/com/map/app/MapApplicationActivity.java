@@ -4,6 +4,8 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,8 +22,8 @@ import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
 import org.mapsforge.android.maps.overlay.OverlayItem;
 
-//import com.map.reading.BusStationReading;
 import com.map.reading.BusStationReading;
+import com.map.reading.OsmParsing;
 import com.map.reading.Routing;
 
 import android.content.Context;
@@ -54,9 +56,15 @@ public class MapApplicationActivity extends MapActivity implements
 		mapView.setOnTouchListener(this);
 
 		setContentView(mapView);
-		// BusStationReading.parseBusStations();
-		OsmParsing.read();
+
+		OsmParsing.readDeserialized();
 		BusStationReading.update();
+
+		mapView.getOverlays().remove(displayNearestStationLocation);
+		mapView.getOverlays().remove(displayDestinationLocation);
+		mapView.getOverlays().remove(displayNearestStationFromDestination);
+		mapView.getOverlays().remove(displayCurentLocation);
+		destinationLocation = null;
 
 		// Get the location manager
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -160,46 +168,79 @@ public class MapApplicationActivity extends MapActivity implements
 			startActivity(in);
 			return true;
 		case R.id.near:
-			mapView.getOverlays().remove(displayNearestStationLocation);
-			nearestStationLocation = BusStationReading
-					.getNearestStation(curentLocation);
-			nearestStationLocationItem = new OverlayItem(
-					nearestStationLocation, "Point", "nearest Station");
+			if (OsmParsing.getData() != null) {
+				mapView.getOverlays().remove(displayNearestStationLocation);
+				nearestStationLocation = BusStationReading
+						.getNearestStation(curentLocation);
+				nearestStationLocationItem = new OverlayItem(
+						nearestStationLocation, "Point", "nearest Station");
 
-			// create the ItemizedOverlay and set the items
-			displayNearestStationLocation = new ArrayItemizedOverlay(
-					getResources().getDrawable(R.drawable.ic_buss));
-			displayNearestStationLocation.addItem(nearestStationLocationItem);
-			// add both Overlays to the MapView
-			mapView.getOverlays().add(displayNearestStationLocation);
+				// create the ItemizedOverlay and set the items
+				displayNearestStationLocation = new ArrayItemizedOverlay(
+						getResources().getDrawable(R.drawable.ic_buss));
+				displayNearestStationLocation
+						.addItem(nearestStationLocationItem);
+				// add both Overlays to the MapView
+				mapView.getOverlays().add(displayNearestStationLocation);
+			} else {
+				Toast.makeText(getApplicationContext(),
+						"You have not updated info!!", Toast.LENGTH_SHORT)
+						.show();
+			}
 			return true;
 		case R.id.neardest:
-			mapView.getOverlays().remove(displayNearestStationFromDestination);
-			nearestStationFromDestination = BusStationReading
-					.getNearestStation(destinationLocation);
-			nearestStationFromDestItem = new OverlayItem(
-					nearestStationFromDestination, "Point", "nearest Station");
-			// create the ItemizedOverlay and set the items
-			displayNearestStationFromDestination = new ArrayItemizedOverlay(
-					getResources().getDrawable(R.drawable.ic_buss_red));
-			displayNearestStationFromDestination
-					.addItem(nearestStationFromDestItem);
-			// add both Overlays to the MapView
-			mapView.getOverlays().add(displayNearestStationFromDestination);
+			if (destinationLocation != null) {
+				mapView.getOverlays().remove(
+						displayNearestStationFromDestination);
+				nearestStationFromDestination = BusStationReading
+						.getNearestStation(destinationLocation);
+				nearestStationFromDestItem = new OverlayItem(
+						nearestStationFromDestination, "Point",
+						"nearest Station");
+				// create the ItemizedOverlay and set the items
+				displayNearestStationFromDestination = new ArrayItemizedOverlay(
+						getResources().getDrawable(R.drawable.ic_buss_red));
+				displayNearestStationFromDestination
+						.addItem(nearestStationFromDestItem);
+				// add both Overlays to the MapView
+				mapView.getOverlays().add(displayNearestStationFromDestination);
+			} else {
+				Toast.makeText(getApplicationContext(),
+						"The Destination Has Not Been Selected!!",
+						Toast.LENGTH_LONG).show();
+			}
 			return true;
 		case R.id.bus_l:
-			Intent in1 = new Intent(getApplicationContext(),
-					BusLineDisplayActivity.class);
-			in1.putExtra("latitude", lat);
-			in1.putExtra("longitude", lng);
-			startActivity(in1);
-			return true;
+			if (OsmParsing.getData() != null) {
+				Intent in1 = new Intent(getApplicationContext(),
+						BusLineDisplayActivity.class);
+				in1.putExtra("latitude", lat);
+				in1.putExtra("longitude", lng);
+				startActivity(in1);
+				return true;
+			} else {
+				Toast.makeText(getApplicationContext(),
+						"You have not updated info!!", Toast.LENGTH_SHORT)
+						.show();
+			}
 		case R.id.bus_dest_l:
-			Intent in2 = new Intent(getApplicationContext(),
-					BusLineDisplayActivity.class);
-			in2.putExtra("latitude", destinationLocation.getLatitude());
-			in2.putExtra("longitude", destinationLocation.getLongitude());
-			startActivity(in2);
+			if (OsmParsing.getData() != null) {
+				if (destinationLocation != null) {
+					Intent in2 = new Intent(getApplicationContext(),
+							BusLineDisplayActivity.class);
+					in2.putExtra("latitude", destinationLocation.getLatitude());
+					in2.putExtra("longitude",
+							destinationLocation.getLongitude());
+					startActivity(in2);
+				}
+				Toast.makeText(getApplicationContext(),
+						"The Destination Has Not Been Selected!!",
+						Toast.LENGTH_LONG).show();
+			} else {
+				Toast.makeText(getApplicationContext(),
+						"You have not updated info!!", Toast.LENGTH_SHORT)
+						.show();
+			}
 			return true;
 		case R.id.route:
 			if (destinationLocation != null) {
@@ -216,6 +257,17 @@ public class MapApplicationActivity extends MapActivity implements
 				Toast.makeText(getApplicationContext(),
 						"The Destination Has Not Been Selected!!",
 						Toast.LENGTH_LONG).show();
+			}
+			return true;
+		case R.id.update:
+			ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo netInfo = cm.getActiveNetworkInfo();
+			if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+				OsmParsing.read();
+				BusStationReading.update();
+			} else {
+				Toast.makeText(getApplicationContext(), "No Internet Acces!!",
+						Toast.LENGTH_SHORT).show();
 			}
 			return true;
 		case R.id.exit:

@@ -1,9 +1,15 @@
 package com.map.osm;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BusLine {
+public class BusLine implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public String id;
 

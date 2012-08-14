@@ -1,7 +1,13 @@
 package com.map.osm;
 
-public class ND {
+import java.io.Serializable;
 
+public class ND implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public String ref;
 
 	public ND(String reference) {
