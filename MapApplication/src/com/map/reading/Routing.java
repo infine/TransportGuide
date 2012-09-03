@@ -38,18 +38,20 @@ public class Routing {
 				stationA.getLocation(),
 				stationB.getLocation()) > 0.2) {
 			
+			busRouteMap.put(KEY_Station,"Take a walk to the station");
 			method1(stationA,stationB);
+			busRouteMap.put(KEY_Station,"Take a walk to the destination");
 			
 			if (busRoutingList.size() == 0) {
-				
+				busRouteMap.put(KEY_Station,"Take a walk to the station");
 				method2(stationA,stationB);
-				
+				busRouteMap.put(KEY_Station,"Take a walk to the destination");
 			}
 			
 			if (busRoutingList.size() == 0) {
-				
+				busRouteMap.put(KEY_Station,"Take a walk to the station");
 				method3(stationA,stationB);
-				
+				busRouteMap.put(KEY_Station,"Take a walk to the destination");
 			}
 		} else {
 

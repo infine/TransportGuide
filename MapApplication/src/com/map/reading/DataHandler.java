@@ -73,7 +73,7 @@ public class DataHandler extends DefaultHandler {
 		if (localName.equalsIgnoreCase("node")) {
 			_isNode = true;
 
-			Log.v("StartElement", localName);
+			// Log.v("StartElement", localName);
 
 			temp = new BusStation(atts.getValue("id"), atts.getValue("lat"),
 					atts.getValue("lon"), atts.getValue("user"),
@@ -89,25 +89,27 @@ public class DataHandler extends DefaultHandler {
 						|| tempTag.equals(BUSS))
 					_data.addNode(temp);
 			}
-			if(_isRelation == true){
+			if (_isRelation == true) {
 				tempRelation.addTags(tempTag);
-				if(tempTag.equals(BUSR)){
+				if (tempTag.equals(BUSR)) {
 					_data.addRelation(tempRelation);
 				}
 			}
 		}
-		if(localName.equalsIgnoreCase("member")){
-			tempMember = new Member(atts.getValue("type"), atts.getValue("role"), atts.getValue("ref"));
-			if(_isRelation && tempMember.getType().equalsIgnoreCase("node")){
+		if (localName.equalsIgnoreCase("member")) {
+			tempMember = new Member(atts.getValue("type"),
+					atts.getValue("role"), atts.getValue("ref"));
+			if (_isRelation && tempMember.getType().equalsIgnoreCase("node")) {
 				tempRelation.addMembers(tempMember);
 			}
 		}
-		
-		if(localName.equalsIgnoreCase("relation"))
-		{
+
+		if (localName.equalsIgnoreCase("relation")) {
 			_isRelation = true;
-			tempRelation = new BusLine(atts.getValue("id"), atts.getValue("version"), atts.getValue("timestamp"), 
-					atts.getValue("uid"), atts.getValue("user"), atts.getValue("changeset"));
+			tempRelation = new BusLine(atts.getValue("id"),
+					atts.getValue("version"), atts.getValue("timestamp"),
+					atts.getValue("uid"), atts.getValue("user"),
+					atts.getValue("changeset"));
 		}
 
 	}
@@ -130,7 +132,7 @@ public class DataHandler extends DefaultHandler {
 			_isNode = false;
 			temp = null;
 		}
-		if(localName.equalsIgnoreCase("relation")){
+		if (localName.equalsIgnoreCase("relation")) {
 			_isRelation = false;
 			tempRelation = null;
 		}

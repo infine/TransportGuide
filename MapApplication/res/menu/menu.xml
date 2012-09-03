@@ -2,25 +2,25 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/refresh"
-        android:icon="@drawable/ic_refresh"
-        android:title="@string/refresh"/>
-    <item
-        android:id="@+id/help"
-        android:icon="@drawable/ic_help"
-        android:title="@string/help"/>
-    <item
-        android:id="@+id/bus"
-        android:icon="@drawable/ic_bus"
-        android:title="@string/bus"/>
-    <item
         android:id="@+id/near"
-        android:icon="@drawable/ic_near"
+        android:icon="@android:drawable/ic_search_category_default"
         android:title="@string/near"/>
     <item
         android:id="@+id/neardest"
-        android:icon="@drawable/ic_dest_near"
+        android:icon="@android:drawable/ic_menu_mylocation"
         android:title="@string/dest"/>
+    <item
+        android:id="@+id/route"
+        android:icon="@android:drawable/ic_menu_directions"
+        android:title="@string/route"/>
+    <item
+        android:id="@+id/bus"
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:title="@string/bus"/>
+    <item
+        android:id="@+id/help"
+        android:icon="@android:drawable/ic_menu_help"
+        android:title="@string/help"/>
     <item
         android:id="@+id/bus_l"
         android:title="@string/busl"/>
@@ -28,8 +28,8 @@
         android:id="@+id/bus_dest_l"
         android:title="@string/busdestl"/>
     <item
-        android:id="@+id/route"
-        android:title="@string/route"/>
+        android:id="@+id/refresh"
+        android:title="@string/refresh"/>
     <item
         android:id="@+id/update"
         android:title="@string/update"/>

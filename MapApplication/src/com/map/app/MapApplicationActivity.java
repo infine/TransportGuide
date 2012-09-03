@@ -15,6 +15,12 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.Toast;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.StreamCorruptedException;
+
 import org.mapsforge.android.maps.overlay.ArrayItemizedOverlay;
 import org.mapsforge.core.GeoPoint;
 import org.mapsforge.android.maps.MapActivity;
@@ -52,13 +58,26 @@ public class MapApplicationActivity extends MapActivity implements
 		mapView = new MapView(this);
 		mapView.setClickable(true);
 		mapView.setBuiltInZoomControls(true);
-		mapView.setMapFile(new File("/sdcard/Others/cluj.map"));
+		mapView.setMapFile(new File("/sdcard/Others/map.map"));
 		mapView.setOnTouchListener(this);
-
 		setContentView(mapView);
+		try {
+			ObjectInputStream input = new ObjectInputStream(
+					new FileInputStream("/sdcard/Others/object.dat"));
+			OsmParsing.readDeserialized(input);
+			BusStationReading.update();
 
-		OsmParsing.readDeserialized();
-		BusStationReading.update();
+		} catch (StreamCorruptedException e) {
+			Toast.makeText(getApplicationContext(),
+					"Please update information", Toast.LENGTH_SHORT).show();
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			Toast.makeText(getApplicationContext(),
+					"Please update information", Toast.LENGTH_SHORT).show();
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		mapView.getOverlays().remove(displayNearestStationLocation);
 		mapView.getOverlays().remove(displayDestinationLocation);
@@ -76,7 +95,6 @@ public class MapApplicationActivity extends MapActivity implements
 		Location location = locationManager.getLastKnownLocation(provider);
 		// Initialize the location fields
 		if (location != null) {
-			System.out.println("Provider " + provider + " has been selected.");
 			lat = location.getLatitude();
 			lng = location.getLongitude();
 		}
@@ -101,6 +119,23 @@ public class MapApplicationActivity extends MapActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
+		try {
+			ObjectInputStream input = new ObjectInputStream(
+					new FileInputStream("/sdcard/Others/object.dat"));
+			OsmParsing.readDeserialized(input);
+			BusStationReading.update();
+
+		} catch (StreamCorruptedException e) {
+			Toast.makeText(getApplicationContext(),
+					"Please update information", Toast.LENGTH_SHORT).show();
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			Toast.makeText(getApplicationContext(),
+					"Please update information", Toast.LENGTH_SHORT).show();
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		mapView.getOverlays().remove(displayNearestStationLocation);
 		locationManager.requestLocationUpdates(provider, 400, 1, this);
 	}
@@ -117,11 +152,9 @@ public class MapApplicationActivity extends MapActivity implements
 		lat = location.getLatitude();
 		lng = location.getLongitude();
 		mapView.getOverlays().remove(displayCurentLocation);
-		mapView.getOverlays().remove(displayNearestStationLocation);
-		mapView.getOverlays().remove(displayNearestStationFromDestination);
-		mapView.getOverlays().remove(displayDestinationLocation);
-		GeoPoint geoPoint1 = new GeoPoint(lat, lng);
-		OverlayItem item1 = new OverlayItem(geoPoint1, "Point", "here you are");
+		curentLocation = new GeoPoint(lat, lng);
+		OverlayItem item1 = new OverlayItem(curentLocation, "Point",
+				"here you are");
 		// create the ItemizedOverlay and set the items
 		displayCurentLocation = new ArrayItemizedOverlay(getResources()
 				.getDrawable(R.drawable.btn_star));
@@ -164,10 +197,15 @@ public class MapApplicationActivity extends MapActivity implements
 					.show();
 			return true;
 		case R.id.bus:
+			if(BusStationReading.getValues().size()!=0){
 			Intent in = new Intent(this, BusStationDisplayActivity.class);
 			startActivity(in);
+			}else {
+				Toast.makeText(getApplicationContext(), "There are no stations available", Toast.LENGTH_LONG).show();
+			}
 			return true;
 		case R.id.near:
+			if(BusStationReading.getValues().size()!=0){
 			if (OsmParsing.getData() != null) {
 				mapView.getOverlays().remove(displayNearestStationLocation);
 				nearestStationLocation = BusStationReading
@@ -187,8 +225,12 @@ public class MapApplicationActivity extends MapActivity implements
 						"You have not updated info!!", Toast.LENGTH_SHORT)
 						.show();
 			}
+			}else {
+				Toast.makeText(getApplicationContext(), "There are no stations available", Toast.LENGTH_LONG).show();
+			}
 			return true;
 		case R.id.neardest:
+			if(BusStationReading.getValues().size()!=0){
 			if (destinationLocation != null) {
 				mapView.getOverlays().remove(
 						displayNearestStationFromDestination);
@@ -209,6 +251,9 @@ public class MapApplicationActivity extends MapActivity implements
 						"The Destination Has Not Been Selected!!",
 						Toast.LENGTH_LONG).show();
 			}
+		}else {
+			Toast.makeText(getApplicationContext(), "There are no stations available", Toast.LENGTH_LONG).show();
+		}
 			return true;
 		case R.id.bus_l:
 			if (OsmParsing.getData() != null) {
@@ -263,8 +308,9 @@ public class MapApplicationActivity extends MapActivity implements
 			ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 			NetworkInfo netInfo = cm.getActiveNetworkInfo();
 			if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-				OsmParsing.read();
-				BusStationReading.update();
+				Intent browserIntent = new Intent(getApplicationContext(),
+						YourMap.class);
+				startActivity(browserIntent);
 			} else {
 				Toast.makeText(getApplicationContext(), "No Internet Acces!!",
 						Toast.LENGTH_SHORT).show();
@@ -283,7 +329,6 @@ public class MapApplicationActivity extends MapActivity implements
 
 	@Override
 	public boolean onTouch(View arg0, MotionEvent event) {
-
 		// ---when user lifts his finger---
 		if (event.getAction() == 1) {
 			mapView.getOverlays().remove(displayDestinationLocation);
@@ -303,7 +348,6 @@ public class MapApplicationActivity extends MapActivity implements
 			// add both Overlays to the MapView
 			mapView.getOverlays().add(displayDestinationLocation);
 		}
-
 		return false;
 	}
 

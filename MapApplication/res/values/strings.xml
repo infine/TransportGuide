@@ -4,17 +4,14 @@
     <string name="hello">Hello World, MapApplicationActivity!</string>
     <string name="help">Help</string>
     <string name="refresh">Refresh</string>
-    <string name="app_name">MapApplication</string>
-    <string name="bus">Show Bus Stations List</string>
+    <string name="app_name">Transport Guide</string>
+    <string name="bus">Show bus stations list</string>
     <string name="exit">Exit</string>
-    <string name="dest">Show Nearest Bus Station from Destination</string>
-    <string name="near">Locate The Nearest Station</string>
-    <string name="busl">BusLines in the nearest Station</string>
-    <string name="route">Routing Beatween Bus Station</string>
-    <string name="busdestl">Show Bus Lines That Stops in the Destination Station</string>
-    <string name="changes_created">create</string>
-    <string name="changes_changed">change</string>
-    <string name="changes_deleted">delete</string>
-    <string name="update">Update Informations</string>
+    <string name="dest">Show the destination station</string>
+    <string name="near">Locate the nearest station</string>
+    <string name="busl">Bus lines that stops in the nearest station</string>
+    <string name="route">Get directions</string>
+    <string name="busdestl">Show bus lines that stops in the destination station</string>
+    <string name="update">Update informations</string>
 
 </resources>
