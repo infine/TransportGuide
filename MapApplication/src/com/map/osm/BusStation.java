@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.mapsforge.core.GeoPoint;
 
-public class BusStation implements Serializable{
+public class BusStation implements Serializable {
 
 	/**
 	 * 

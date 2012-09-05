@@ -23,7 +23,7 @@ public class RouteActivity extends ListActivity {
 		setContentView(R.layout.main1);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		busRoutingList = Routing.getValues();
-		
+
 		// timeTable1.add(timeTable);
 		ListAdapter mSchedule = new SimpleAdapter(this, busRoutingList,
 				R.layout.list_item, new String[] { KEY_Message, KEY_Station,

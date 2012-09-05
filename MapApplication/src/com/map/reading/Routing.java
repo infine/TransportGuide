@@ -34,24 +34,23 @@ public class Routing {
 		BusStation stationB = BusStationReading.getNearestID();
 		System.out.println(b2.getLatitude() + b2.getLongitude());
 
-		if (BusStationReading.distance(
-				stationA.getLocation(),
+		if (BusStationReading.distance(stationA.getLocation(),
 				stationB.getLocation()) > 0.2) {
-			
-			busRouteMap.put(KEY_Station,"Take a walk to the station");
-			method1(stationA,stationB);
-			busRouteMap.put(KEY_Station,"Take a walk to the destination");
-			
+
+			busRouteMap.put(KEY_Station, "Take a walk to the station");
+			method1(stationA, stationB);
+			busRouteMap.put(KEY_Station, "Take a walk to the destination");
+
 			if (busRoutingList.size() == 0) {
-				busRouteMap.put(KEY_Station,"Take a walk to the station");
-				method2(stationA,stationB);
-				busRouteMap.put(KEY_Station,"Take a walk to the destination");
+				busRouteMap.put(KEY_Station, "Take a walk to the station");
+				method2(stationA, stationB);
+				busRouteMap.put(KEY_Station, "Take a walk to the destination");
 			}
-			
+
 			if (busRoutingList.size() == 0) {
-				busRouteMap.put(KEY_Station,"Take a walk to the station");
-				method3(stationA,stationB);
-				busRouteMap.put(KEY_Station,"Take a walk to the destination");
+				busRouteMap.put(KEY_Station, "Take a walk to the station");
+				method3(stationA, stationB);
+				busRouteMap.put(KEY_Station, "Take a walk to the destination");
 			}
 		} else {
 
@@ -87,8 +86,8 @@ public class Routing {
 		}
 
 	}
-	
-	private static void method1(BusStation stationA, BusStation stationB){
+
+	private static void method1(BusStation stationA, BusStation stationB) {
 		for (BusLine line1 : stationA.getLines())
 			for (BusLine line2 : stationB.getLines()) {
 				if (line1.equals(line2)) {
@@ -103,9 +102,8 @@ public class Routing {
 				}
 			}
 	}
-	
-	private static void method2(BusStation stationA, BusStation stationB)
-	{
+
+	private static void method2(BusStation stationA, BusStation stationB) {
 		for (BusLine line1 : stationA.getLines())
 			for (BusLine line2 : stationB.getLines()) {
 				for (BusStation station1 : line1.getStations())
@@ -126,9 +124,8 @@ public class Routing {
 					}
 			}
 	}
-	
-	private static void method3(BusStation stationA, BusStation stationB)
-	{
+
+	private static void method3(BusStation stationA, BusStation stationB) {
 		double min = 10.0;
 		BusStation stationDestA = null;
 		BusStation stationDestB = null;
@@ -138,8 +135,7 @@ public class Routing {
 				for (BusStation station1 : line1.getStations())
 					for (BusStation station2 : line2.getStations()) {
 						double dist = BusStationReading.distance(
-								station1.getLocation(),
-								station2.getLocation());
+								station1.getLocation(), station2.getLocation());
 						if (dist < min) {
 							min = dist;
 							stationDestA = station1;
@@ -155,12 +151,12 @@ public class Routing {
 				add(0, stationA.toString(), lineA.toString());
 
 				add(1, stationDestA.toString(), lineA.toString());
-				
+
 				add(0, stationDestB.toString(), lineB.toString());
 
 				add(1, stationB.toString(), lineB.toString());
-				
-				add(2,null,null);
+
+				add(2, null, null);
 			}
 		}
 	}

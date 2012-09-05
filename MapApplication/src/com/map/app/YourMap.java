@@ -1,6 +1,5 @@
 package com.map.app;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -10,22 +9,21 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
+import com.map.reading.DownloadTask;
 import com.mapquest.android.maps.GeoPoint;
 import com.mapquest.android.maps.MapActivity;
 import com.mapquest.android.maps.MapView;
 
 public class YourMap extends MapActivity {
 	MapView map;
-	ProgressDialog pd;
 	Context context;
-	public static Boolean resBoolean = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		this.context = this;	
+		this.context = this;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main2);
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		// set the zoom level, center point and enable the default zoom controls
 		map = (MapView) findViewById(R.id.map);
 		map.getController().setZoom(11);
@@ -48,17 +46,15 @@ public class YourMap extends MapActivity {
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.done:
-					Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE))
-							.getDefaultDisplay();
-					int width = display.getWidth();
-					int height = display.getHeight();
-					GeoPoint geopoint1 = map.getProjection().fromPixels(0, 0);
-					GeoPoint geopoint2 = map.getProjection().fromPixels(width,
-							height);
+			Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE))
+					.getDefaultDisplay();
+			int width = display.getWidth();
+			int height = display.getHeight();
+			GeoPoint geopoint1 = map.getProjection().fromPixels(0, 0);
+			GeoPoint geopoint2 = map.getProjection().fromPixels(width, height);
 
-            new DownloadTask(context, geopoint1, geopoint2).execute();
-			
-			
+			new DownloadTask(context, geopoint1, geopoint2).execute();
+
 			return true;
 		case R.id.cancel:
 			finish();
@@ -67,12 +63,7 @@ public class YourMap extends MapActivity {
 		}
 
 	}
-	
-	public static void setTrue(){
-		resBoolean = true;
-	}
-	
-	
+
 	// return false since no route is being displayed
 	@Override
 	public boolean isRouteDisplayed() {

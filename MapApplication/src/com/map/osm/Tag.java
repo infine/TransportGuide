@@ -2,7 +2,7 @@ package com.map.osm;
 
 import java.io.Serializable;
 
-public class Tag implements Serializable{
+public class Tag implements Serializable {
 
 	/**
 	 * 
@@ -25,21 +25,20 @@ public class Tag implements Serializable{
 	public String getV() {
 		return v;
 	}
-	
-	public String getVwhereK(String k)
-	{
-		if(this.k.equalsIgnoreCase(k)){
+
+	public String getVwhereK(String k) {
+		if (this.k.equalsIgnoreCase(k)) {
 			return v;
-		}else return null;
+		} else
+			return null;
 	}
-	
-	public boolean equals(Tag tag)
-	{
-		if(this.k.equalsIgnoreCase(tag.getK()) && this.v.equalsIgnoreCase(tag.getV())
-				)
+
+	public boolean equals(Tag tag) {
+		if (this.k.equalsIgnoreCase(tag.getK())
+				&& this.v.equalsIgnoreCase(tag.getV()))
 			return true;
-		else 
+		else
 			return false;
-		
+
 	}
 }

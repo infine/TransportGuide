@@ -197,63 +197,70 @@ public class MapApplicationActivity extends MapActivity implements
 					.show();
 			return true;
 		case R.id.bus:
-			if(BusStationReading.getValues().size()!=0){
-			Intent in = new Intent(this, BusStationDisplayActivity.class);
-			startActivity(in);
-			}else {
-				Toast.makeText(getApplicationContext(), "There are no stations available", Toast.LENGTH_LONG).show();
+			if (BusStationReading.getValues().size() != 0) {
+				Intent in = new Intent(this, BusStationDisplayActivity.class);
+				startActivity(in);
+			} else {
+				Toast.makeText(getApplicationContext(),
+						"There are no stations available", Toast.LENGTH_LONG)
+						.show();
 			}
 			return true;
 		case R.id.near:
-			if(BusStationReading.getValues().size()!=0){
-			if (OsmParsing.getData() != null) {
-				mapView.getOverlays().remove(displayNearestStationLocation);
-				nearestStationLocation = BusStationReading
-						.getNearestStation(curentLocation);
-				nearestStationLocationItem = new OverlayItem(
-						nearestStationLocation, "Point", "nearest Station");
+			if (BusStationReading.getValues().size() != 0) {
+				if (OsmParsing.getData() != null) {
+					mapView.getOverlays().remove(displayNearestStationLocation);
+					nearestStationLocation = BusStationReading
+							.getNearestStation(curentLocation);
+					nearestStationLocationItem = new OverlayItem(
+							nearestStationLocation, "Point", "nearest Station");
 
-				// create the ItemizedOverlay and set the items
-				displayNearestStationLocation = new ArrayItemizedOverlay(
-						getResources().getDrawable(R.drawable.ic_buss));
-				displayNearestStationLocation
-						.addItem(nearestStationLocationItem);
-				// add both Overlays to the MapView
-				mapView.getOverlays().add(displayNearestStationLocation);
+					// create the ItemizedOverlay and set the items
+					displayNearestStationLocation = new ArrayItemizedOverlay(
+							getResources().getDrawable(R.drawable.ic_buss));
+					displayNearestStationLocation
+							.addItem(nearestStationLocationItem);
+					// add both Overlays to the MapView
+					mapView.getOverlays().add(displayNearestStationLocation);
+				} else {
+					Toast.makeText(getApplicationContext(),
+							"You have not updated info!!", Toast.LENGTH_SHORT)
+							.show();
+				}
 			} else {
 				Toast.makeText(getApplicationContext(),
-						"You have not updated info!!", Toast.LENGTH_SHORT)
+						"There are no stations available", Toast.LENGTH_LONG)
 						.show();
-			}
-			}else {
-				Toast.makeText(getApplicationContext(), "There are no stations available", Toast.LENGTH_LONG).show();
 			}
 			return true;
 		case R.id.neardest:
-			if(BusStationReading.getValues().size()!=0){
-			if (destinationLocation != null) {
-				mapView.getOverlays().remove(
-						displayNearestStationFromDestination);
-				nearestStationFromDestination = BusStationReading
-						.getNearestStation(destinationLocation);
-				nearestStationFromDestItem = new OverlayItem(
-						nearestStationFromDestination, "Point",
-						"nearest Station");
-				// create the ItemizedOverlay and set the items
-				displayNearestStationFromDestination = new ArrayItemizedOverlay(
-						getResources().getDrawable(R.drawable.ic_buss_red));
-				displayNearestStationFromDestination
-						.addItem(nearestStationFromDestItem);
-				// add both Overlays to the MapView
-				mapView.getOverlays().add(displayNearestStationFromDestination);
+			if (BusStationReading.getValues().size() != 0) {
+				if (destinationLocation != null) {
+					mapView.getOverlays().remove(
+							displayNearestStationFromDestination);
+					nearestStationFromDestination = BusStationReading
+							.getNearestStation(destinationLocation);
+					nearestStationFromDestItem = new OverlayItem(
+							nearestStationFromDestination, "Point",
+							"nearest Station");
+					// create the ItemizedOverlay and set the items
+					displayNearestStationFromDestination = new ArrayItemizedOverlay(
+							getResources().getDrawable(R.drawable.ic_buss_red));
+					displayNearestStationFromDestination
+							.addItem(nearestStationFromDestItem);
+					// add both Overlays to the MapView
+					mapView.getOverlays().add(
+							displayNearestStationFromDestination);
+				} else {
+					Toast.makeText(getApplicationContext(),
+							"The Destination Has Not Been Selected!!",
+							Toast.LENGTH_LONG).show();
+				}
 			} else {
 				Toast.makeText(getApplicationContext(),
-						"The Destination Has Not Been Selected!!",
-						Toast.LENGTH_LONG).show();
+						"There are no stations available", Toast.LENGTH_LONG)
+						.show();
 			}
-		}else {
-			Toast.makeText(getApplicationContext(), "There are no stations available", Toast.LENGTH_LONG).show();
-		}
 			return true;
 		case R.id.bus_l:
 			if (OsmParsing.getData() != null) {

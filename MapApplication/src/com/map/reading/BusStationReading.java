@@ -31,9 +31,8 @@ public class BusStationReading {
 			busStationMap.put(station.getId(), station);
 	}
 
-	
 	public static GeoPoint getNearestStation(GeoPoint a) {
-		//busStationList = OsmParsing.getData().getNodes();
+		// busStationList = OsmParsing.getData().getNodes();
 		double min = distance(busStationList.get(0).getLocation(), a);
 		GeoPoint nearestCoord = busStationList.get(0).getLocation();
 		for (BusStation station : busStationList) {
@@ -49,29 +48,28 @@ public class BusStationReading {
 		return nearestCoord;
 	}
 
-/*	public static double distance(GeoPoint a, GeoPoint b) {
-		double DEGREE_LENGTH = 111.2;
-		double latDist = (a.getLatitude() - b.getLatitude()) * DEGREE_LENGTH;
-		double lngDist = (a.getLongitude() - b.getLongitude()) * DEGREE_LENGTH;
-		double dist = Math.sqrt(latDist * latDist + lngDist * lngDist);
-		return dist;
+	/*
+	 * public static double distance(GeoPoint a, GeoPoint b) { double
+	 * DEGREE_LENGTH = 111.2; double latDist = (a.getLatitude() -
+	 * b.getLatitude()) * DEGREE_LENGTH; double lngDist = (a.getLongitude() -
+	 * b.getLongitude()) * DEGREE_LENGTH; double dist = Math.sqrt(latDist *
+	 * latDist + lngDist * lngDist); return dist; }
+	 */
+	public static double distance(GeoPoint a, GeoPoint b) {
+		double R = 6371; // km
+		double lat1 = a.getLatitude();
+		double lon1 = a.getLongitude();
+		double lat2 = b.getLatitude();
+		double lon2 = b.getLongitude();
+		double dLat = Math.toRadians(lat2 - lat1);
+		double dLon = Math.toRadians(lon2 - lon1);
+		double ans = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+				+ Math.cos(Math.toRadians(lat1))
+				* Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2)
+				* Math.sin(dLon / 2);
+		double c = 2 * Math.atan2(Math.sqrt(ans), Math.sqrt(1 - ans));
+		return R * c;
 	}
-	*/
-    public static double distance(GeoPoint a, GeoPoint b){
-        double R = 6371; // km
-        double lat1 = a.getLatitude();
-        double lon1 = a.getLongitude();
-        double lat2 = b.getLatitude();
-        double lon2 = b.getLongitude();
-        double dLat = Math.toRadians(lat2-lat1);
-        double dLon = Math.toRadians(lon2-lon1); 
-        double ans = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * 
-                Math.sin(dLon/2) * Math.sin(dLon/2); 
-        double c = 2 * Math.atan2(Math.sqrt(ans), Math.sqrt(1-ans)); 
-        return R * c;
-}
-
 
 	public static BusStation getNearestID() {
 		return busStationMap.get(id);

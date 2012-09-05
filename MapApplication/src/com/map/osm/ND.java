@@ -2,7 +2,7 @@ package com.map.osm;
 
 import java.io.Serializable;
 
-public class ND implements Serializable{
+public class ND implements Serializable {
 
 	/**
 	 * 

@@ -1,4 +1,5 @@
 package com.map.reading;
+
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -15,6 +16,7 @@ public class ObjectSerializer {
 
 	// file where serialized object would be stored
 	private static final String OBJECT_FILE_NAME = "/sdcard/Others/object.dat";
+
 	/**
 	 * De-serialize the Object from the file
 	 */
@@ -49,10 +51,10 @@ public class ObjectSerializer {
 					new FileOutputStream(OBJECT_FILE_NAME));
 			out.writeObject(objToSerialize);
 			out.close();
-			System.out.println("Object : " +objToSerialize.getClass()
+			System.out.println("Object : " + objToSerialize.getClass()
 					+ " serialized successfully");
-			//System.out.println("Object : " + objToSerialize.getClass()
-			//		+ " serialized successfully");
+			// System.out.println("Object : " + objToSerialize.getClass()
+			// + " serialized successfully");
 		} catch (Exception ex) {
 			System.out.println("Error Saving Object to File :"
 					+ ex.getMessage());

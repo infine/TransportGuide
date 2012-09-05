@@ -1,7 +1,5 @@
-package com.map.app;
+package com.map.reading;
 
-import com.map.reading.BusStationReading;
-import com.map.reading.OsmParsing;
 import com.mapquest.android.maps.GeoPoint;
 
 import android.app.ProgressDialog;
@@ -30,15 +28,15 @@ public class DownloadTask extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected Void doInBackground(Void... arg0) {
-			OsmParsing.read(startPoint, endPoint);
-			BusStationReading.update();
-			return null;
+		OsmParsing.read(startPoint, endPoint);
+		BusStationReading.update();
+		return null;
 	}
 
 	@Override
 	protected void onPostExecute(Void unused) {
 		dialog.dismiss();
-		
+
 	}
 
 }

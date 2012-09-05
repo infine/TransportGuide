@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BusLine implements Serializable{
+public class BusLine implements Serializable {
 
 	/**
 	 * 
@@ -24,8 +24,8 @@ public class BusLine implements Serializable{
 	public String changeset;
 
 	public List<Member> members = new ArrayList<Member>();
-	
-	public List<BusStation> busStations = new ArrayList<BusStation>(); 
+
+	public List<BusStation> busStations = new ArrayList<BusStation>();
 
 	public List<Tag> tags = new ArrayList<Tag>();
 
@@ -46,13 +46,12 @@ public class BusLine implements Serializable{
 	public void addTags(Tag tg) {
 		tags.add(tg);
 	}
-	
-	public void addStation(BusStation station)
-	{
+
+	public void addStation(BusStation station) {
 		busStations.add(station);
 	}
-	
-	public List<BusStation> getStations(){
+
+	public List<BusStation> getStations() {
 		return busStations;
 	}
 
